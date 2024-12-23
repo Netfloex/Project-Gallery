@@ -21,7 +21,8 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "tsBuildInfoFile": ".next/tsbuildinfo.json"
   },
   "include": [
     "next-env.d.ts",
