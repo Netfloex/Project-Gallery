@@ -3,6 +3,9 @@ name: Tests
 on:
     push:
 
+env:
+    NEXT_BASE_PATH: /nextjs-template
+
 jobs:
     tests:
         runs-on: docker
@@ -28,6 +31,8 @@ jobs:
             # Build pages
             - name: Build static site
               run: yarn build
+              env:
+                  NEXT_BASE_PATH: ${{ env.NEXT_BASE_PATH }}
 
             - name: Copy /public
               run: cp -a public/. out/
