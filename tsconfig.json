@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "paths": {
+
+      "@typings/*": ["./src/typings/*"]
+    },
     "target": "ES2017",
     "lib": [
       "dom",

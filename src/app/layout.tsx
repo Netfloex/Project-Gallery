@@ -2,20 +2,26 @@ import { Metadata } from "next"
 
 import "./globals.css"
 
-export default function RootLayout({
-	children,
-}: Readonly<{
-	children: React.ReactNode
-}>) {
-	return (
-		<html lang="en">
-			<body>{children}</body>
-		</html>
-	)
-}
+import { Providers } from "./Providers"
+
+import { FCC } from "@typings/FCC"
+
+const RootLayout: FCC = ({ children }) => (
+	<html lang="en" className="dark">
+		<head>
+			<meta charSet="utf-8" />
+			<meta name="viewport" content="width=device-width" />
+		</head>
+		<body>
+			<Providers>{children}</Providers>
+		</body>
+	</html>
+)
 
 export const metadata: Metadata = {
 	title: "Nextjs Template",
 	description: "Basic Nextjs template",
 	manifest: "/manifest.json",
 }
+
+export default RootLayout
