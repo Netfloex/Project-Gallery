@@ -1,0 +1,40 @@
+name: Tests
+
+on:
+    push:
+
+jobs:
+    tests:
+        runs-on: docker
+        container:
+            image: ghcr.io/catthehacker/ubuntu:js-22.04
+        steps:
+            # Prepare
+
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Install Dependencies
+              run: yarn install --frozen-lockfile --ignore-scripts
+
+              # Checks
+
+            - name: Check Types
+              run: yarn typescript
+
+            - name: Test ESLint
+              run: yarn lint
+
+            # Build pages
+            - name: Build static site
+              run: yarn build
+
+            - name: Copy /public
+              run: cp -a public/. out/
+
+            - name: Deploy
+              uses: https://github.com/peaceiris/actions-gh-pages@v4
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./out
+                  publish_branch: pages
