@@ -10,7 +10,10 @@ module.exports = {
 	tabWidth: 4,
 	printWidth: 80,
 	arrowParens: "always",
-	plugins: ["@ianvs/prettier-plugin-sort-imports"],
+	plugins: [
+		"@ianvs/prettier-plugin-sort-imports",
+		"prettier-plugin-tailwindcss",
+	],
 	importOrder: [
 		".*scss$",
 		"",
