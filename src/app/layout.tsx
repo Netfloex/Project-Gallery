@@ -21,7 +21,6 @@ const RootLayout: FCC = ({ children }) => (
 export const metadata: Metadata = {
 	title: "Nextjs Template",
 	description: "Basic Nextjs template",
-	manifest: "/manifest.json",
 }
 
 export default RootLayout

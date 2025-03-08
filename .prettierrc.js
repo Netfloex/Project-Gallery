@@ -21,6 +21,8 @@ module.exports = {
 		"",
 		"<THIRD_PARTY_MODULES>",
 		"",
+		"^@heroui/.*",
+		"",
 		"^@hooks/.*",
 		"",
 		"^(@lib)|(@utils)/.*",

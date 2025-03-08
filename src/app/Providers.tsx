@@ -1,7 +1,7 @@
-import { NextUIProvider } from "@nextui-org/react"
+import { HeroUIProvider } from "@heroui/system"
 
 import { FCC } from "@typings/FCC"
 
 export const Providers: FCC = ({ children }) => (
-	<NextUIProvider>{children}</NextUIProvider>
+	<HeroUIProvider>{children}</HeroUIProvider>
 )

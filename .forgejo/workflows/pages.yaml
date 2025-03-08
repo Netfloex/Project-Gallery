@@ -1,7 +1,8 @@
-name: Tests
+name: Test and deploy pages
 
 on:
     push:
+    workflow_dispatch:
 
 env:
     NEXT_BASE_PATH: /nextjs-template
@@ -13,7 +14,6 @@ jobs:
             image: ghcr.io/catthehacker/ubuntu:js-22.04
         steps:
             # Prepare
-
             - name: Checkout
               uses: actions/checkout@v4
 
@@ -35,7 +35,9 @@ jobs:
                   NEXT_BASE_PATH: ${{ env.NEXT_BASE_PATH }}
 
             - name: Copy /public
-              run: cp -a public/. out/
+              run: |
+                  cp -a public/. out/
+                  cp .domains out/
 
             - name: Deploy
               uses: https://github.com/peaceiris/actions-gh-pages@v4
