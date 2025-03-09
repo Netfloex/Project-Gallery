@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "paths": {
-
+      "@components/*": ["./src/components/*"],
       "@typings/*": ["./src/typings/*"]
     },
     "target": "ES2017",

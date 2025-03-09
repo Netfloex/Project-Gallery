@@ -4,15 +4,18 @@ import "./globals.css"
 
 import { Providers } from "./Providers"
 
+import { Header } from "@components/Header"
+
 import { FCC } from "@typings/FCC"
 
 const RootLayout: FCC = ({ children }) => (
-	<html lang="en" className="dark">
+	<html className="dark" lang="en">
 		<head>
 			<meta charSet="utf-8" />
-			<meta name="viewport" content="width=device-width" />
+			<meta content="width=device-width" name="viewport" />
 		</head>
 		<body>
+			<Header />
 			<Providers>{children}</Providers>
 		</body>
 	</html>
