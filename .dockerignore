@@ -1,0 +1,10 @@
+**
+
+!/src/**
+!/public
+!/package.json
+!/yarn.lock
+!/next.config.ts
+!/tsconfig.json
+!/tailwind.config.ts
+!/postcss.config.mjs

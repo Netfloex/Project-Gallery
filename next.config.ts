@@ -1,10 +1,12 @@
 import type { NextConfig } from "next"
 
-const envBasePath = process.env.NEXT_BASE_PATH
+const basePath = process.env.NEXT_BASE_PATH
+
+const output = process.env.NEXT_OUTPUT_STANDALONE ? "standalone" : "export"
 
 const nextConfig: NextConfig = {
-	output: "export",
-	basePath: envBasePath,
+	output,
+	basePath,
 }
 
 export default nextConfig
