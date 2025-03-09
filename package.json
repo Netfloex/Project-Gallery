@@ -10,15 +10,10 @@
 		"postinstall": "husky",
 		"typescript": "tsc"
 	},
-	"dependencies": {
-		"husky": "^9.1.7",
-		"next": "^15.2.1",
-		"react": "^19.0.0",
-		"react-dom": "^19.0.0"
-	},
+	"dependencies": {},
 	"devDependencies": {
-		"@heroui/react": "https://pkg.pr.new/@heroui/react@4656",
 		"@eslint/eslintrc": "^3.3.0",
+		"@heroui/react": "^2.7.6-beta.1",
 		"@ianvs/prettier-plugin-sort-imports": "^4.4.1",
 		"@tailwindcss/postcss": "^4.0.12",
 		"@types/node": "^22.13.10",
@@ -29,9 +24,13 @@
 		"eslint-config-prettier": "^10.1.1",
 		"eslint-plugin-prettier": "^5.2.3",
 		"framer-motion": "^12.4.10",
+		"husky": "^9.1.7",
+		"next": "^15.2.1",
 		"postcss": "^8.5.3",
 		"prettier": "^3.5.3",
 		"prettier-plugin-tailwindcss": "^0.6.11",
+		"react": "^19.0.0",
+		"react-dom": "^19.0.0",
 		"tailwindcss": "^4.0.12",
 		"typescript": "^5.8.2"
 	}
