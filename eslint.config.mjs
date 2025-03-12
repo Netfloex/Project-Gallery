@@ -6,6 +6,9 @@ const compat = new FlatCompat({
 })
 
 const eslintConfig = [
+	{
+		ignores: [".next", "out", "build"],
+	},
 	...compat.extends(
 		"next/core-web-vitals",
 		"next/typescript",
@@ -14,6 +17,22 @@ const eslintConfig = [
 	{
 		plugins: { "@stylistic": stylistic },
 		rules: {
+			// Typescript
+			"@typescript-eslint/explicit-function-return-type": "error",
+
+			// React
+			"react/jsx-curly-brace-presence": "error",
+			"react/jsx-no-useless-fragment": "error",
+			"react/jsx-pascal-case": "error",
+			"react/jsx-sort-props": "error",
+			"react/no-array-index-key": "error",
+			"react/prefer-stateless-function": "error",
+			"react/self-closing-comp": "error",
+
+			// ESLint
+
+			"arrow-body-style": ["error", "as-needed"],
+
 			"padding-line-between-statements": [
 				"error",
 
