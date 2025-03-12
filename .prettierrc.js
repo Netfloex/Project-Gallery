@@ -3,6 +3,7 @@
 /** @type {import("@ianvs/prettier-plugin-sort-imports").PrettierConfig} */
 
 module.exports = {
+	endOfLine: "lf",
 	trailingComma: "all",
 	useTabs: true,
 	semi: false,
@@ -25,8 +26,7 @@ module.exports = {
 		"",
 		"^@hooks/.*",
 		"",
-		"^(@lib)|(@utils)/.*",
-		"",
+		"^@api/.*",
 		"",
 		"^(@|\\./)components/*",
 		"",

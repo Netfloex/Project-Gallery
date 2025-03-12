@@ -17,6 +17,9 @@ const eslintConfig = [
 	{
 		plugins: { "@stylistic": stylistic },
 		rules: {
+			// Unix linebreaks
+			"linebreak-style": ["error", "unix"],
+
 			// Typescript
 			"@typescript-eslint/explicit-function-return-type": "error",
 
