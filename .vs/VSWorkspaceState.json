@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\.husky",
+    "\\public",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\(home)",
+    "\\src\\app\\login",
+    "\\src\\app\\register",
+    "\\src\\components",
+    "\\src\\typings"
+  ],
+  "SelectedNode": "\\postcss.config.mjs",
+  "PreviewInSolutionExplorer": false
+}

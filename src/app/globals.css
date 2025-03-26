@@ -1,2 +1,22 @@
 @import "tailwindcss";
 @config "../../tailwind.config.ts";
+
+:root {
+    --background: white;
+    --text-color: black;
+  }
+  
+  .solarized {
+    --background: #002b36;
+    --text-color: #839496;
+  }
+  
+  .neon {
+    --background: #0f0f0f;
+    --text-color: #39ff14;
+  }
+  
+  .pastel {
+    --background: #ffe4e1;
+    --text-color: #5a5a5a;
+  }
