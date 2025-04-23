@@ -4,6 +4,7 @@ import "./globals.css"
 
 import { Providers } from "./Providers"
 
+import { Footer } from "@components/Footer"
 import { Header } from "@components/Header"
 
 import { FCC } from "@typings/FCC"
@@ -17,6 +18,7 @@ const RootLayout: FCC = ({ children }) => (
 		<body>
 			<Header />
 			<Providers>{children}</Providers>
+			<Footer />
 		</body>
 	</html>
 )
