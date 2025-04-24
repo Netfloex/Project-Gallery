@@ -16,6 +16,9 @@ jobs:
               with:
                   node-version: 22.14.0
 
+            - name: Generate database models
+              run: yarn db:generate
+
             - name: Check Types
               run: yarn typescript
 

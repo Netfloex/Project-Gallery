@@ -16,6 +16,7 @@ COPY --from=deps /app/node_modules ./node_modules
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_OUTPUT_STANDALONE=1
 
+RUN yarn run db:generate
 RUN yarn build
 
 FROM $NODE_IMAGE AS runner
@@ -26,10 +27,14 @@ ENV NODE_ENV=production
 ENV STORE_PATH=/data/store.json
 ENV FORCE_COLOR=1
 
+RUN yarn global add prisma
+
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/generated ./generated
+COPY --from=builder /app/prisma ./prisma
 
 EXPOSE 3000
 
-CMD ["node", "server"]
+CMD ["sh", "-c", "prisma migrate deploy && node server"]

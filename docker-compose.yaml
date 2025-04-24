@@ -1,0 +1,36 @@
+services:
+    postgres:
+        image: postgres
+        container_name: "project-gallery-db"
+
+        environment:
+            POSTGRES_DB: postgres
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+
+        networks:
+            - project-gallery
+
+        volumes:
+            - db-data:/var/lib/postgresql/data
+
+        command: postgres -c listen_addresses='*'
+
+    app:
+        build: .
+        container_name: "project-gallery"
+
+        networks:
+            - project-gallery
+
+        environment:
+            DATABASE_URL: "postgresql://postgres:postgres@project-gallery-db:5432/postgres?schema=public"
+
+        ports:
+            - 3000:3000
+
+networks:
+    project-gallery:
+
+volumes:
+    db-data:

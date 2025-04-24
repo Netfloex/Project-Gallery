@@ -2,6 +2,7 @@
 
 !/src/**
 !/public
+!/prisma
 !/package.json
 !/yarn.lock
 !/next.config.ts
