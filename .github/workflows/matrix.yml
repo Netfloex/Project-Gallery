@@ -2,6 +2,20 @@ name: docker-build
 
 on:
     push:
+        paths:
+            - "prisma/**"
+            - "public/**"
+            - "src/**"
+            - "tsconfig.json"
+            - "package.json"
+            - "yarn.lock"
+            - "next.config.*"
+            - "postcss.config.*"
+            - "tailwind.config.*"
+            - "Dockerfile"
+            - "docker-compose.yaml"
+            - ".dockerignore"
+            - ".github/workflows/matrix.yml"
         branches:
             - master
         tags:
