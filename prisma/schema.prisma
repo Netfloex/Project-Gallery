@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -15,8 +15,30 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  email     String   @unique
-  name      String?
+  studentNumber String    @id
+  name          String
+  projects      Project[]
+}
+
+model Curator {
+  studentNumber String    @id
+  Project       Project[]
+}
+
+model Project {
+  id                    Int      @id @default(autoincrement())
+  createdAt             DateTime @default(now())
+  name                  String
+  description           String
+  uploader              User     @relation(fields: [uploaderStudentNumber], references: [studentNumber])
+  uploaderStudentNumber String
+  approved              Boolean
+  approvedBy            Curator? @relation(fields: [curatorStudentNumber], references: [studentNumber])
+  curatorStudentNumber  String
+  language              Language
+}
+
+enum Language {
+  PYTHON
+  JAVA
 }
