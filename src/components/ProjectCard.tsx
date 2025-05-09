@@ -1,4 +1,5 @@
-import { Project } from "@prisma/client"
+"use client"
+
 import { format } from "timeago.js"
 
 import {
@@ -13,8 +14,9 @@ import {
 } from "@heroui/react"
 
 import { FCC } from "@typings/FCC"
+import { PublishedProject } from "@typings/project"
 
-export const ProjectCard: FCC<{ project: Project }> = ({ project }) => (
+const ProjectCard: FCC<{ project: PublishedProject }> = ({ project }) => (
 	<Card>
 		<CardHeader>
 			<p className="text-xl">{project.name}</p>
@@ -44,3 +46,5 @@ export const ProjectCard: FCC<{ project: Project }> = ({ project }) => (
 		</CardFooter>
 	</Card>
 )
+
+export default ProjectCard
