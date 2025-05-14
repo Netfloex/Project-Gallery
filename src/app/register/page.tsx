@@ -28,6 +28,7 @@ const Register: FC = () => {
 						}
 						isRequired
 						label="Username"
+						maxLength={20}
 						minLength={2}
 						name="username"
 						placeholder="Enter your given username"
