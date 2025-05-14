@@ -1,5 +1,7 @@
 "use server"
 
+import { registeredUsernamesFile } from "@utils/config"
+import { readLines } from "@utils/readLines"
 import { z } from "zod"
 
 const RegisterSchema = z.object({
@@ -48,8 +50,21 @@ export const register = async (
 		}
 	}
 
-	return {
-		success: true,
-		error: false,
+	const { username } = validatedFields.data
+
+	const registrableUsernames = await readLines(registeredUsernamesFile)
+
+	if (registrableUsernames.includes(username.toLowerCase())) {
+		return {
+			success: true,
+			error: false,
+		}
+	} else {
+		return {
+			success: false,
+			error: true,
+			errorMessage:
+				"Username is not in the list of registrable usernames",
+		}
 	}
 }

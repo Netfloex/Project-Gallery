@@ -19,3 +19,6 @@ next-env.d.ts
 
 # prisma
 generated/prisma/
+
+# data
+data
