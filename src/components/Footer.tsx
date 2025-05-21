@@ -32,6 +32,12 @@ export const Footer: FC = () => (
 							>
 								Register
 							</Link>
+							<Link
+								className="text-default-300 transition-opacity hover:opacity-75"
+								href="/compiler"
+							>
+								Compiler
+							</Link>
 						</div>
 					</div>
 				</div>

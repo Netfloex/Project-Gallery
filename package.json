@@ -10,7 +10,12 @@
 		"postinstall": "husky",
 		"typescript": "tsc"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"cors": "^2.8.5",
+		"express": "^5.1.0",
+		"pyodide": "^0.27.6",
+		"zod": "^3.25.8"
+	},
 	"devDependencies": {
 		"@heroui/react": "^2.7.6-beta.1",
 		"@ianvs/prettier-plugin-sort-imports": "^4.4.1",
