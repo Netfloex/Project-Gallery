@@ -1,9 +1,9 @@
 import random
 
 def number_guessing_game():
-    number = random.randint(1, 100)
+    number = random.randint(1, 10)
     attempts = 0
-    print("Guess the number between 1 and 100!")
+    print("Guess the number between 1 and 10!")
 
     while True:
         guess = input("Your guess: ")
