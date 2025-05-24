@@ -9,10 +9,10 @@ def quiz_game():
     for q, a in questions.items():
         user_answer = input(q).lower().strip()
         if user_answer == a:
-            print("✅ Correct!")
+            print("Correct!")
             score += 1
         else:
-            print(f"❌ Wrong! The correct answer is '{a}'")
+            print(f"Wrong! The correct answer is '{a}'")
     print(f"\nYour final score: {score}/{len(questions)}")
 
 quiz_game()

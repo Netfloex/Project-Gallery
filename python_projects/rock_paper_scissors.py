@@ -2,7 +2,7 @@ import random
 
 def rps():
     choices = ["rock", "paper", "scissors"]
-    print("🎮 Rock, Paper, Scissors! (type 'quit' to stop)")
+    print("Rock, Paper, Scissors! (type 'quit' to stop)")
 
     while True:
         user = input("Your choice: ").lower()
@@ -16,12 +16,12 @@ def rps():
         print(f"Computer chose: {comp}")
 
         if user == comp:
-            print("🤝 It's a tie!")
+            print("It's a tie!")
         elif (user == "rock" and comp == "scissors") or \
              (user == "paper" and comp == "rock") or \
              (user == "scissors" and comp == "paper"):
-            print("🎉 You win!")
+            print("You win!")
         else:
-            print("💻 Computer wins!")
+            print("Computer wins!")
 
 rps()

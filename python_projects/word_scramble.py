@@ -6,11 +6,11 @@ def scramble_game():
     word = random.choice(words)
     scrambled = ''.join(random.sample(word, len(word)))
 
-    print(f"🔀 Unscramble the word: {scrambled}")
+    print(f"Unscramble the word: {scrambled}")
     guess = input("Your guess: ").strip().lower()
 
     if guess == word:
-        print("🎉 Correct!")
+        print("Correct!")
     else:
         print(f"Oops! The correct word was '{word}'.")
 
