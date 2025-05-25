@@ -1,19 +1,56 @@
-import { createServer } from "node:http"
+import { startServer } from "./lib/startServer"
+import { PrismaClient } from "@prisma/client"
+import { z } from "zod"
 
-import { Server } from "socket.io"
+const ProjectIdSchema = z.coerce.number().int().positive()
+const prisma = new PrismaClient()
+const io = startServer()
 
-const server = createServer()
-const io = new Server(server, {
-	cors: {
-		origin: "*",
-	},
-})
-
-io.on("connection", (socket) => {
-	console.log("A user connected")
+io.on("connection", async (socket) => {
 	socket.on("disconnect", () => {
-		console.log("A user disconnected")
+		console.log("[-] ", socket.id)
+		console.log("Total connections: ", io.engine.clientsCount)
 	})
-})
+	console.log("[+] ", socket.id)
+	console.log("Total connections: ", io.engine.clientsCount)
 
-server.listen(3000)
+	const projectIdQuery = socket.handshake.query["project-id"]
+
+	const projectIdParsed = ProjectIdSchema.safeParse(projectIdQuery)
+
+	if (!projectIdParsed.success) {
+		console.error("Invalid project ID:", projectIdQuery)
+		socket.disconnect(true)
+
+		return
+	}
+
+	const projectId = projectIdParsed.data
+
+	console.log("Project ID:", projectId)
+
+	const project = await prisma.project.findUnique({
+		where: { id: projectId },
+		select: {
+			id: true,
+			name: true,
+			files: {
+				select: {
+					name: true,
+					contents: true,
+				},
+			},
+		},
+	})
+
+	if (!project) {
+		console.error("Project not found:", projectId)
+		socket.disconnect(true)
+
+		return
+	}
+
+	console.log("Project found:", project)
+
+	socket.emit("newLine", `Project "${project.name}" connected.`)
+})
