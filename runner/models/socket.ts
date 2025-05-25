@@ -1,5 +1,10 @@
+export type ServerLine = {
+	id: number
+	content: string
+}
+
 export interface ServerToClientEvents {
-	newLine: (message: string) => void
+	newLine: (message: ServerLine) => void
 }
 
 export type ClientToServerEvents = {

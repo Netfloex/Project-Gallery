@@ -28,9 +28,8 @@ export const ProjectDetails: FC<{ project: ApprovedProject }> = ({
 			<p>{project.description}</p>
 
 			<div>
-				{lines.map((line, index) => (
-					// eslint-disable-next-line react/no-array-index-key
-					<p key={index}>{line}</p>
+				{lines.map((line) => (
+					<p key={line.id}>{line.content}</p>
 				))}
 			</div>
 			<Form className="flex flex-row" onSubmit={onSubmit}>

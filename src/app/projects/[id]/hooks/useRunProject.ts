@@ -1,5 +1,6 @@
 import {
 	ClientToServerEvents,
+	ServerLine,
 	ServerToClientEvents,
 } from "../../../../../runner/models/socket"
 import { useEffect, useState } from "react"
@@ -9,15 +10,22 @@ const URL = process.env.NEXT_PUBLIC_SOCKET_URL || undefined
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>
 
+interface ClientLine {
+	id: number
+	content: string
+}
+
+type Line = ClientLine | ServerLine
+
 interface UseRunProjectReturn {
-	lines: string[]
+	lines: Line[]
 	sendMessage: (message: string) => void
 }
 
 const useValue = <T>(value: () => T): T => useState<T>(value)[0]
 
 export const useRunProject = (projectId: number): UseRunProjectReturn => {
-	const [lines, setLines] = useState<string[]>([])
+	const [lines, setLines] = useState<Line[]>([])
 
 	const socket = useValue<SocketType>(() =>
 		io(URL, {
@@ -37,7 +45,7 @@ export const useRunProject = (projectId: number): UseRunProjectReturn => {
 		socket.on("disconnect", () => {
 			console.log("Disconnected from the server")
 		})
-		socket.on("newLine", (message: string) => {
+		socket.on("newLine", (message) => {
 			setLines((prevLines) => [...prevLines, message])
 		})
 
@@ -52,6 +60,14 @@ export const useRunProject = (projectId: number): UseRunProjectReturn => {
 
 	const sendMessage = (message: string): void => {
 		socket.emit("sendMessage", message)
+
+		setLines((prevLines) => [
+			...prevLines,
+			{
+				content: message,
+				id: Date.now(),
+			},
+		])
 	}
 
 	return { lines, sendMessage }
