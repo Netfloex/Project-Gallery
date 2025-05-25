@@ -13,7 +13,14 @@ export const getApprovedProjects = async (): Promise<ApprovedProject[]> =>
 			id: true,
 			description: true,
 			createdAt: true,
-			publicVotes: true,
+			uploader: {
+				select: {
+					name: true,
+					createdAt: true,
+					profilePicture: true,
+					role: true,
+				},
+			},
 			_count: {
 				select: { votes: true },
 			},

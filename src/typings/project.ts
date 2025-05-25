@@ -1,3 +1,4 @@
+import { PublicUser } from "./user"
 import { Project } from "@prisma/client"
 
 /**
@@ -8,4 +9,4 @@ import { Project } from "@prisma/client"
 export type ApprovedProject = Pick<
 	Project,
 	"name" | "id" | "description" | "createdAt"
-> & { _count: { votes: number } }
+> & { _count: { votes: number }; uploader: PublicUser }

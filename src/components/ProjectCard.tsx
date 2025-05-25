@@ -4,6 +4,7 @@ import Link from "next/link"
 import { format } from "timeago.js"
 
 import {
+	Avatar,
 	Button,
 	Card,
 	CardBody,
@@ -23,16 +24,25 @@ const ProjectCard: FCC<{ project: ApprovedProject }> = ({ project }) => (
 
 		<Divider />
 
-		<CardBody className="gap-1">
-			{/* <div>
-				<Chip>{project.language}</Chip>
-			</div> */}
-			<p>{project.description}</p>
+		<CardBody className="flex-row">
+			<div className="grow-1">
+				<p>{project.description}</p>
+			</div>
+
+			<div>
+				<Avatar
+					name={project.uploader.name}
+					showFallback
+					src={project.uploader.profilePicture}
+				/>
+			</div>
 		</CardBody>
 
 		<CardFooter className="gap-3">
-			<div className="grow-1">
-				<p className="text-sm">{format(project.createdAt)}</p>
+			<div className="flex grow-1 flex-row gap-4 text-sm">
+				<p>{format(project.createdAt)}</p>
+
+				<p>{project._count.votes} votes</p>
 			</div>
 			<Button
 				as={Link}

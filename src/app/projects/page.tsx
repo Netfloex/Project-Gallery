@@ -19,7 +19,7 @@ const Dashboard: NextPage = async () => {
 
 	return (
 		<Suspense fallback={<LoadingPage />}>
-			<div className="container mx-auto grid grid-cols-4 gap-4 py-4">
+			<div className="container mx-auto grid grid-cols-1 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4">
 				{projects.map((project) => (
 					<ProjectCard key={project.id} project={project} />
 				))}

@@ -15,6 +15,14 @@ export const getApprovedProject = async (
 			id: true,
 			description: true,
 			createdAt: true,
+			uploader: {
+				select: {
+					name: true,
+					createdAt: true,
+					profilePicture: true,
+					role: true,
+				},
+			},
 			_count: { select: { votes: true } },
 		},
 	})
