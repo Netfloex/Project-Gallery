@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { format } from "timeago.js"
 
 import {
@@ -8,15 +9,13 @@ import {
 	CardBody,
 	CardFooter,
 	CardHeader,
-	Chip,
 	Divider,
-	Link,
 } from "@heroui/react"
 
 import { FCC } from "@typings/FCC"
-import { PublishedProject } from "@typings/project"
+import { ApprovedProject } from "@typings/project"
 
-const ProjectCard: FCC<{ project: PublishedProject }> = ({ project }) => (
+const ProjectCard: FCC<{ project: ApprovedProject }> = ({ project }) => (
 	<Card>
 		<CardHeader>
 			<p className="text-xl">{project.name}</p>
@@ -25,9 +24,9 @@ const ProjectCard: FCC<{ project: PublishedProject }> = ({ project }) => (
 		<Divider />
 
 		<CardBody className="gap-1">
-			<div>
+			{/* <div>
 				<Chip>{project.language}</Chip>
-			</div>
+			</div> */}
 			<p>{project.description}</p>
 		</CardBody>
 
@@ -39,7 +38,7 @@ const ProjectCard: FCC<{ project: PublishedProject }> = ({ project }) => (
 				as={Link}
 				color="primary"
 				href={`/projects/${project.id}`}
-				showAnchorIcon
+				// showAnchorIcon
 			>
 				Visit
 			</Button>

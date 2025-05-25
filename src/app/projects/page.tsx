@@ -1,4 +1,4 @@
-import { getPublishedProjects } from "./actions"
+import { getApprovedProjects } from "./actions"
 import { NextPage } from "next"
 import { Suspense } from "react"
 
@@ -8,7 +8,7 @@ import ProjectCard from "@components/ProjectCard"
 export const dynamic = "force-dynamic"
 
 const Dashboard: NextPage = async () => {
-	const projects = await getPublishedProjects()
+	const projects = await getApprovedProjects()
 
 	return (
 		<Suspense fallback={<LoadingPage />}>

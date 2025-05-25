@@ -3,10 +3,10 @@
 import prisma from "@lib/prisma"
 import { unstable_cache } from "next/cache"
 
-import { PublishedProject } from "@typings/project"
+import { ApprovedProject } from "@typings/project"
 
-export const getPublishedProjects = unstable_cache(
-	async (): Promise<PublishedProject[]> =>
+export const getApprovedProjects = unstable_cache(
+	async (): Promise<ApprovedProject[]> =>
 		await prisma.project.findMany({
 			// Only projects that have been approved should be shown on the dashboard.
 			where: { approved: true },
@@ -17,7 +17,10 @@ export const getPublishedProjects = unstable_cache(
 				id: true,
 				description: true,
 				createdAt: true,
-				language: true,
+				publicVotes: true,
+				_count: {
+					select: { votes: true },
+				},
 			},
 		}),
 	["published-projects"],

@@ -14,31 +14,70 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// A user, who has a student number, name, password and role. Can upload projects and vote on them.
 model User {
-  studentNumber String    @id
-  name          String
-  projects      Project[]
+  studentNumber  String   @id
+  createdAt      DateTime @default(now())
+  name           String
+  password       String
+  profilePicture String
+  role           Role     @default(USER)
+
+  projects              Project[]
+  votes                 Vote[]
+  profileUpdateRequests ProfileUpdateRequest[]
 }
 
-model Curator {
-  studentNumber String    @id
-  Project       Project[]
+/// The role for a user, defines their capabilities
+enum Role {
+  USER
+  CURATOR
 }
 
+model ProfileUpdateRequest {
+  id Int @id @default(autoincrement())
+
+  newName        String?
+  profilePicture String?
+
+  requester              User   @relation(fields: [requesterStudentNumber], references: [studentNumber])
+  requesterStudentNumber String
+}
+
+/// A vote that can be cast on a project by a user
+model Vote {
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
+
+  user              User   @relation(fields: [userStudentNumber], references: [studentNumber])
+  userStudentNumber String
+
+  @@id([userStudentNumber, projectId])
+}
+
+/// A project that is created by an uploader (user), has a name & description, can be approved by a curator, can be voted on
 model Project {
-  id                    Int      @id @default(autoincrement())
-  createdAt             DateTime @default(now())
-  name                  String
-  description           String
-  uploader              User     @relation(fields: [uploaderStudentNumber], references: [studentNumber])
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  name        String
+  description String
+  approved    Boolean  @default(false)
+
+  votes       Vote[]
+  publicVotes Int    @default(0)
+
+  files File[]
+
+  uploader              User   @relation(fields: [uploaderStudentNumber], references: [studentNumber])
   uploaderStudentNumber String
-  approved              Boolean
-  approvedBy            Curator? @relation(fields: [curatorStudentNumber], references: [studentNumber])
-  curatorStudentNumber  String
-  language              Language
 }
 
-enum Language {
-  PYTHON
-  JAVA
+// A file uploaded that contains user provided code. Has a name and is related to a project.
+model File {
+  id       Int    @id @default(autoincrement())
+  name     String
+  contents String
+
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
 }

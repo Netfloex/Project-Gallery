@@ -5,7 +5,7 @@ import { Project } from "@prisma/client"
  *
  * Can be used on the client side.
  */
-export type PublishedProject = Pick<
+export type ApprovedProject = Pick<
 	Project,
-	"name" | "id" | "description" | "createdAt" | "language"
->
+	"name" | "id" | "description" | "createdAt"
+> & { _count: { votes: number } }
