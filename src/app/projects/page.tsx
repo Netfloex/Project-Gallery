@@ -1,5 +1,6 @@
-import { getApprovedProjects } from "./actions"
+import { getApprovedProjects } from "./actions/getApprovedProjects"
 import { NextPage } from "next"
+import { unstable_cache } from "next/cache"
 import { Suspense } from "react"
 
 import LoadingPage from "@components/LoadingPage"
@@ -8,7 +9,13 @@ import ProjectCard from "@components/ProjectCard"
 export const dynamic = "force-dynamic"
 
 const Dashboard: NextPage = async () => {
-	const projects = await getApprovedProjects()
+	const getProjectsCached = unstable_cache(
+		async () => await getApprovedProjects(),
+		["approved-projects"],
+		{ revalidate: 60 },
+	)
+
+	const projects = await getProjectsCached()
 
 	return (
 		<Suspense fallback={<LoadingPage />}>

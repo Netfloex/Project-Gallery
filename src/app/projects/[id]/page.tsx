@@ -1,7 +1,11 @@
+import { getApprovedProject } from "./actions/getApprovedProject"
+import { ProjectDetails } from "./ProjectDetails"
 import { NextPage } from "next"
-import { Suspense } from "react"
+import { unstable_cache } from "next/cache"
 
-import LoadingPage from "@components/LoadingPage"
+import ErrorPage from "@components/ErrorPage"
+
+export const dynamic = "force-dynamic"
 
 const ProjectPage: NextPage<{
 	params: Promise<{ id: string }>
@@ -10,13 +14,24 @@ const ProjectPage: NextPage<{
 
 	const idParsed = parseInt(id)
 
-	if (isNaN(idParsed)) return <div>The project id has to be a number</div>
+	if (!isNaN(idParsed)) {
+		const getProjectCached = unstable_cache(
+			async (id) => await getApprovedProject(id),
+			[idParsed.toString()],
+			{ tags: ["approved-project"], revalidate: 60 },
+		)
 
-	return (
-		<Suspense fallback={<LoadingPage />}>
-			<div className="container">{idParsed}</div>
-		</Suspense>
-	)
+		const project = await getProjectCached(idParsed)
+
+		if (project !== null)
+			return (
+				<div className="container mx-auto">
+					<ProjectDetails project={project} />
+				</div>
+			)
+	}
+
+	return <ErrorPage errorText="Project not found" />
 }
 
 export default ProjectPage
