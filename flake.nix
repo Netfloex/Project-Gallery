@@ -16,7 +16,7 @@
     in {
       devShells = {
         default = pkgs.mkShell {
-          packages = with pkgs; [nodejs yarn prisma openssl pkg-config];
+          packages = with pkgs; [nodejs yarn prisma openssl pkg-config python3];
 
           shellHook = with pkgs; ''
             export PRISMA_QUERY_ENGINE_BINARY="${prisma-engines}/bin/query-engine"

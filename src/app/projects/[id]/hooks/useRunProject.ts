@@ -2,26 +2,34 @@ import {
 	ClientToServerEvents,
 	ServerToClientEvents,
 } from "../../../../../runner/models/socket"
-import { Dispatch, SetStateAction, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { io, Socket } from "socket.io-client"
 
 const URL = process.env.NEXT_PUBLIC_SOCKET_URL || undefined
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>
 
-export const useRunProject = (
-	projectId: number,
-	setLines: Dispatch<SetStateAction<string[]>>,
-): void => {
-	useEffect(() => {
-		const socket: SocketType = io(URL, {
+interface UseRunProjectReturn {
+	lines: string[]
+	sendMessage: (message: string) => void
+}
+
+const useValue = <T>(value: () => T): T => useState<T>(value)[0]
+
+export const useRunProject = (projectId: number): UseRunProjectReturn => {
+	const [lines, setLines] = useState<string[]>([])
+
+	const socket = useValue<SocketType>(() =>
+		io(URL, {
 			autoConnect: false,
 			transports: ["websocket"],
 			query: {
 				"project-id": projectId,
 			},
-		})
+		}),
+	)
 
+	useEffect(() => {
 		socket.connect()
 		socket.on("connect", () => {
 			console.log("Connected to the server")
@@ -40,5 +48,11 @@ export const useRunProject = (
 			socket.off("disconnect")
 			socket.disconnect()
 		}
-	}, [projectId, setLines])
+	}, [socket, projectId, setLines])
+
+	const sendMessage = (message: string): void => {
+		socket.emit("sendMessage", message)
+	}
+
+	return { lines, sendMessage }
 }

@@ -1,5 +1,7 @@
 import { startServer } from "./lib/startServer"
+import { writeTmpFile } from "./utils/writeFile"
 import { PrismaClient } from "@prisma/client"
+import { PythonShell } from "python-shell"
 import { z } from "zod"
 
 const ProjectIdSchema = z.coerce.number().int().positive()
@@ -53,4 +55,20 @@ io.on("connection", async (socket) => {
 	console.log("Project found:", project)
 
 	socket.emit("newLine", `Project "${project.name}" connected.`)
+
+	const projectFile = await writeTmpFile(project.files[0].contents)
+
+	const pythonShell = new PythonShell(projectFile, {})
+
+	pythonShell.on("message", (message) => {
+		console.log("Python message:", message)
+		socket.emit("newLine", message)
+	})
+
+	socket.on("sendMessage", (message: string) => {
+		console.log("Received message:", message)
+		socket.emit("newLine", `> ${message}`)
+
+		pythonShell.send(message)
+	})
 })

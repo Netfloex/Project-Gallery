@@ -1,18 +1,25 @@
 "use client"
 
 import { useRunProject } from "./hooks/useRunProject"
-import { FC, useState } from "react"
+import { FC, FormEvent, useState } from "react"
 
-import { Divider } from "@heroui/react"
+import { Divider, Form, Input } from "@heroui/react"
 
 import { ApprovedProject } from "@typings/project"
 
 export const ProjectDetails: FC<{ project: ApprovedProject }> = ({
 	project,
 }) => {
-	const [lines, setLines] = useState<string[]>([])
+	const [messageInput, setMessageInput] = useState<string>("")
 
-	useRunProject(project.id, setLines)
+	const { lines, sendMessage } = useRunProject(project.id)
+
+	const onSubmit = (e: FormEvent<HTMLFormElement>): void => {
+		e.preventDefault()
+
+		setMessageInput("")
+		sendMessage(messageInput)
+	}
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -26,6 +33,10 @@ export const ProjectDetails: FC<{ project: ApprovedProject }> = ({
 					<p key={index}>{line}</p>
 				))}
 			</div>
+			<Form className="flex flex-row" onSubmit={onSubmit}>
+				<Input onValueChange={setMessageInput} value={messageInput} />
+				<Input type="submit" value="Send" />
+			</Form>
 		</div>
 	)
 }
