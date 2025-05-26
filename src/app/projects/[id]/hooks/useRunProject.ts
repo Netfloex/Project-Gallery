@@ -13,6 +13,7 @@ type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>
 interface ClientLine {
 	id: number
 	content: string
+	isMe: true
 }
 
 type Line = ClientLine | ServerLine
@@ -66,6 +67,7 @@ export const useRunProject = (projectId: number): UseRunProjectReturn => {
 			{
 				content: message,
 				id: Date.now(),
+				isMe: true,
 			},
 		])
 	}
