@@ -20,7 +20,7 @@ model User {
   createdAt      DateTime @default(now())
   name           String
   password       String
-  profilePicture String
+  profilePicture String?
   role           Role     @default(USER)
 
   projects              Project[]

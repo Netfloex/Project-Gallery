@@ -33,7 +33,7 @@ const ProjectCard: FCC<{ project: ApprovedProject }> = ({ project }) => (
 				<Avatar
 					name={project.uploader.name}
 					showFallback
-					src={project.uploader.profilePicture}
+					src={project.uploader.profilePicture || undefined}
 				/>
 			</div>
 		</CardBody>
