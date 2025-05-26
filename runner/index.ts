@@ -13,10 +13,6 @@ const io = startServer()
 const id = (): number => randomInt(1000_000)
 
 io.on("connection", async (socket) => {
-	socket.on("disconnect", () => {
-		console.log("[-] ", socket.id)
-		console.log("Total connections: ", io.engine.clientsCount)
-	})
 	console.log("[+] ", socket.id)
 	console.log("Total connections: ", io.engine.clientsCount)
 
@@ -75,9 +71,25 @@ io.on("connection", async (socket) => {
 		})
 	})
 
+	pythonShell.on("close", () => {
+		console.log("Python script finished")
+		socket.emit("newLine", {
+			id: id(),
+			content: "Python script finished",
+		})
+		socket.disconnect(true)
+	})
+
 	socket.on("sendMessage", (message: string) => {
 		console.log("Received message:", message)
 
 		pythonShell.send(message)
+	})
+
+	socket.on("disconnect", () => {
+		console.log("[-] ", socket.id)
+		console.log("Total connections: ", io.engine.clientsCount)
+
+		pythonShell.kill("SIGKILL")
 	})
 })
