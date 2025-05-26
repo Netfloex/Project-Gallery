@@ -1,5 +1,3 @@
-"use server"
-
 import { getApprovedProjects } from "../projects/actions/getApprovedProjects"
 import { unstable_cache } from "next/cache"
 import Link from "next/link"
@@ -9,6 +7,8 @@ import { Button, ScrollShadow } from "@heroui/react"
 import ProjectCard from "@components/ProjectCard"
 
 import type { FC } from "react"
+
+export const dynamic = "force-dynamic"
 
 const Home: FC = async () => {
 	const getTopVotedProjectsCached = unstable_cache(
