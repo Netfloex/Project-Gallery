@@ -7,8 +7,9 @@ const isVotesSortOption = (sort: SortOption): boolean =>
 	sort === "votes-asc" || sort === "votes-desc"
 
 export const getApprovedProjects = async (
-	query: undefined | string,
 	sort: SortOption,
+	query?: string,
+	limit = 50,
 ): Promise<ApprovedProject[]> =>
 	await prisma.project.findMany({
 		// Only projects that have been approved should be shown on the dashboard.
@@ -40,7 +41,7 @@ export const getApprovedProjects = async (
 				: undefined,
 		},
 
-		take: 50,
+		take: limit,
 
 		// Select only the required properties for a published project.
 		select: {

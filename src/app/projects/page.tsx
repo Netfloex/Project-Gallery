@@ -32,7 +32,7 @@ const Dashboard: NextPage<{
 
 	const getProjectsCached = unstable_cache(
 		async (query, sortOption) =>
-			await getApprovedProjects(query, sortOption),
+			await getApprovedProjects(sortOption, query),
 		[query ?? "", sortOption],
 		{ tags: ["approved-projects"], revalidate: 5 },
 	)
