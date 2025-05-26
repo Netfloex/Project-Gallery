@@ -18,8 +18,8 @@ datasource db {
 model User {
   studentNumber  String   @id
   createdAt      DateTime @default(now())
-  name           String
   password       String
+  name           String?
   profilePicture String?
   role           Role     @default(USER)
 

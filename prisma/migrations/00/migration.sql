@@ -5,8 +5,8 @@ CREATE TYPE "Role" AS ENUM ('USER', 'CURATOR');
 CREATE TABLE "User" (
     "studentNumber" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "name" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "name" TEXT,
     "profilePicture" TEXT,
     "role" "Role" NOT NULL DEFAULT 'USER',
 
