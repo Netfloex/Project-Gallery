@@ -3,7 +3,7 @@ import {
 	ServerLine,
 	ServerToClientEvents,
 } from "../../../../../runner/models/socket"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { io, Socket } from "socket.io-client"
 
 const URL = process.env.NEXT_PUBLIC_SOCKET_URL || undefined
@@ -18,15 +18,28 @@ interface ClientLine {
 
 type Line = ClientLine | ServerLine
 
+export enum SocketStatus {
+	Connected,
+	Disconnected,
+	Connecting,
+}
+
 interface UseRunProjectReturn {
 	lines: Line[]
 	sendMessage: (message: string) => void
+	socketStatus: SocketStatus
+	connectSocket: () => void
+	disconnectSocket: () => void
 }
 
 const useValue = <T>(value: () => T): T => useState<T>(value)[0]
 
 export const useRunProject = (projectId: number): UseRunProjectReturn => {
 	const [lines, setLines] = useState<Line[]>([])
+
+	const [socketStatus, setSocketStatus] = useState<SocketStatus>(
+		SocketStatus.Disconnected,
+	)
 
 	const socket = useValue<SocketType>(() =>
 		io(URL, {
@@ -38,26 +51,43 @@ export const useRunProject = (projectId: number): UseRunProjectReturn => {
 		}),
 	)
 
-	useEffect(() => {
+	const connectSocket = useCallback((): void => {
 		socket.connect()
+		setSocketStatus(SocketStatus.Connecting)
+
 		socket.on("connect", () => {
 			console.log("Connected to the server")
+			setSocketStatus(SocketStatus.Connected)
+			setLines([])
 		})
+
 		socket.on("disconnect", () => {
 			console.log("Disconnected from the server")
+			setSocketStatus(SocketStatus.Disconnected)
 		})
+
 		socket.on("newLine", (message) => {
 			setLines((prevLines) => [...prevLines, message])
 		})
+	}, [socket, setLines, setSocketStatus])
 
+	const disconnectSocket = useCallback((): void => {
+		console.log("Disconnect")
+
+		socket.off("connect")
+		socket.off("disconnect")
+		socket.off("newLine")
+
+		socket.disconnect()
+		setSocketStatus(SocketStatus.Disconnected)
+	}, [socket, setSocketStatus])
+
+	// eslint-disable-next-line arrow-body-style
+	useEffect(() => {
 		return (): void => {
-			console.log("Disconnect")
-
-			socket.off("connect")
-			socket.off("disconnect")
-			socket.disconnect()
+			disconnectSocket()
 		}
-	}, [socket, projectId, setLines])
+	}, [disconnectSocket])
 
 	const sendMessage = (message: string): void => {
 		socket.emit("sendMessage", message)
@@ -72,5 +102,5 @@ export const useRunProject = (projectId: number): UseRunProjectReturn => {
 		])
 	}
 
-	return { lines, sendMessage }
+	return { lines, sendMessage, socketStatus, connectSocket, disconnectSocket }
 }
