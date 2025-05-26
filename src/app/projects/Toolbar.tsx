@@ -2,7 +2,7 @@
 
 import { FC, useRef } from "react"
 
-import { Form, Input, Select, SelectItem } from "@heroui/react"
+import { Card, Form, Input, Select, SelectItem } from "@heroui/react"
 
 export const sortOptionsWithLabels = [
 	{ key: "date-desc", label: "Date Descending" },
@@ -21,7 +21,7 @@ export const Toolbar: FC<{
 
 	return (
 		<Form ref={formRef}>
-			<div className="flex flex-row gap-4">
+			<Card className="flex flex-col gap-4 p-2 sm:flex-row">
 				<Input
 					defaultValue={
 						searchQuery?.length !== 0 ? searchQuery : undefined
@@ -48,7 +48,7 @@ export const Toolbar: FC<{
 						</SelectItem>
 					)}
 				</Select>
-			</div>
+			</Card>
 		</Form>
 	)
 }

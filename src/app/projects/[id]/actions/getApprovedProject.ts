@@ -5,7 +5,7 @@ import { ApprovedProject } from "@typings/project"
 export const getApprovedProject = async (
 	id: number,
 ): Promise<ApprovedProject | null> =>
-	await prisma.project.findFirst({
+	await prisma.project.findUnique({
 		// Only projects that have been approved should be shown on the dashboard.
 		where: { approved: true, id: id },
 

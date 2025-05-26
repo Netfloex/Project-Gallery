@@ -18,27 +18,24 @@ import { ApprovedProject } from "@typings/project"
 
 const ProjectCard: FCC<{ project: ApprovedProject }> = ({ project }) => (
 	<Card>
-		<CardHeader>
-			<p className="text-xl">{project.name}</p>
+		<CardHeader className="flex flex-row items-center">
+			<p className="grow-1 text-xl">{project.name}</p>
+			<Avatar
+				name={project.uploader.name}
+				showFallback
+				src={project.uploader.profilePicture || undefined}
+			/>
 		</CardHeader>
 
 		<Divider />
 
-		<CardBody className="flex-row">
-			<div className="grow-1">
-				<p>{project.description}</p>
-			</div>
-
-			<div>
-				<Avatar
-					name={project.uploader.name}
-					showFallback
-					src={project.uploader.profilePicture || undefined}
-				/>
-			</div>
+		<CardBody>
+			<p className="line-clamp-3">{project.description}</p>
 		</CardBody>
 
-		<CardFooter className="gap-3">
+		<Divider />
+
+		<CardFooter className="gap-4">
 			<div className="flex grow-1 flex-row gap-4 text-sm">
 				<p>{format(project.createdAt)}</p>
 

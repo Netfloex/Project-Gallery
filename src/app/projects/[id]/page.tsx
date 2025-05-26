@@ -1,11 +1,11 @@
+"use server"
+
 import { getApprovedProject } from "./actions/getApprovedProject"
 import { ProjectDetails } from "./ProjectDetails"
 import { NextPage } from "next"
 import { unstable_cache } from "next/cache"
 
 import ErrorPage from "@components/ErrorPage"
-
-export const dynamic = "force-dynamic"
 
 const ProjectPage: NextPage<{
 	params: Promise<{ id: string }>
@@ -18,7 +18,7 @@ const ProjectPage: NextPage<{
 		const getProjectCached = unstable_cache(
 			async (id) => await getApprovedProject(id),
 			[idParsed.toString()],
-			{ tags: ["approved-project"], revalidate: 60 },
+			{ tags: ["approved-project"], revalidate: 5 },
 		)
 
 		const project = await getProjectCached(idParsed)

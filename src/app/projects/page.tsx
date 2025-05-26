@@ -5,6 +5,7 @@ import { unstable_cache } from "next/cache"
 import { Suspense } from "react"
 import { z } from "zod"
 
+import ErrorPage from "@components/ErrorPage"
 import LoadingPage from "@components/LoadingPage"
 import ProjectCard from "@components/ProjectCard"
 
@@ -30,12 +31,13 @@ const Dashboard: NextPage<{
 	const sortOptionError = sortParamResult.error?.format()._errors.join("\n")
 
 	const getProjectsCached = unstable_cache(
-		async (query) => await getApprovedProjects(query, sortOption),
-		["approved-projects", query ?? "", sortOption],
-		{ revalidate: 5 },
+		async (query, sortOption) =>
+			await getApprovedProjects(query, sortOption),
+		[query ?? "", sortOption],
+		{ tags: ["approved-projects"], revalidate: 5 },
 	)
 
-	const projects = await getProjectsCached(query)
+	const projects = await getProjectsCached(query, sortOption)
 
 	return (
 		<Suspense fallback={<LoadingPage />}>
@@ -46,11 +48,16 @@ const Dashboard: NextPage<{
 					sortOption={sortOption}
 					sortOptionError={sortOptionError}
 				/>
-				<div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-					{projects.map((project) => (
-						<ProjectCard key={project.id} project={project} />
-					))}
-				</div>
+				{projects.length !== 0 && (
+					<div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
+						{projects.map((project) => (
+							<ProjectCard key={project.id} project={project} />
+						))}
+					</div>
+				)}
+				{projects.length === 0 && (
+					<ErrorPage errorText="No projects found" />
+				)}
 			</div>
 		</Suspense>
 	)
