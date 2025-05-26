@@ -3,10 +3,9 @@ import {
 	ServerLine,
 	ServerToClientEvents,
 } from "../../../../../runner/models/socket"
+import { runnerSocketUrl } from "@utils/config"
 import { useCallback, useEffect, useState } from "react"
 import { io, Socket } from "socket.io-client"
-
-const URL = process.env.NEXT_PUBLIC_SOCKET_URL || undefined
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>
 
@@ -42,7 +41,7 @@ export const useRunProject = (projectId: number): UseRunProjectReturn => {
 	)
 
 	const socket = useValue<SocketType>(() =>
-		io(URL, {
+		io(runnerSocketUrl, {
 			autoConnect: false,
 			transports: ["websocket"],
 			query: {
