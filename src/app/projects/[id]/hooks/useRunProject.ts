@@ -54,7 +54,14 @@ export const useRunProject = (projectId: number): UseRunProjectReturn => {
 	const connectSocket = useCallback((): void => {
 		socket.connect()
 		setSocketStatus(SocketStatus.Connecting)
+	}, [socket, setSocketStatus])
 
+	const disconnectSocket = useCallback((): void => {
+		socket.disconnect()
+		setSocketStatus(SocketStatus.Disconnected)
+	}, [socket, setSocketStatus])
+
+	useEffect(() => {
 		socket.on("connect", () => {
 			console.log("Connected to the server")
 			setSocketStatus(SocketStatus.Connected)
@@ -69,37 +76,30 @@ export const useRunProject = (projectId: number): UseRunProjectReturn => {
 		socket.on("newLine", (message) => {
 			setLines((prevLines) => [...prevLines, message])
 		})
-	}, [socket, setLines, setSocketStatus])
 
-	const disconnectSocket = useCallback((): void => {
-		console.log("Disconnect")
-
-		socket.off("connect")
-		socket.off("disconnect")
-		socket.off("newLine")
-
-		socket.disconnect()
-		setSocketStatus(SocketStatus.Disconnected)
-	}, [socket, setSocketStatus])
-
-	// eslint-disable-next-line arrow-body-style
-	useEffect(() => {
 		return (): void => {
-			disconnectSocket()
+			socket.off("connect")
+			socket.off("disconnect")
+			socket.off("newLine")
+
+			socket.disconnect()
+			setSocketStatus(SocketStatus.Disconnected)
 		}
-	}, [disconnectSocket])
+	}, [socket])
 
 	const sendMessage = (message: string): void => {
-		socket.emit("sendMessage", message)
+		if (socket) {
+			socket.emit("sendMessage", message)
 
-		setLines((prevLines) => [
-			...prevLines,
-			{
-				content: message,
-				id: Date.now(),
-				isMe: true,
-			},
-		])
+			setLines((prevLines) => [
+				...prevLines,
+				{
+					content: message,
+					id: Date.now(),
+					isMe: true,
+				},
+			])
+		}
 	}
 
 	return { lines, sendMessage, socketStatus, connectSocket, disconnectSocket }
