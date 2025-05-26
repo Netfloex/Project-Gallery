@@ -27,11 +27,27 @@ const Register: FC = () => {
 									: "default"
 						}
 						isRequired
-						label="Username"
+						label="Student Number"
 						maxLength={20}
 						minLength={2}
-						name="username"
-						placeholder="Enter your given username"
+						name="studentNumber"
+						placeholder="Enter your given student number"
+					/>
+					<Input
+						color={
+							state.error
+								? "danger"
+								: state.success
+									? "success"
+									: "default"
+						}
+						isRequired
+						label="Password"
+						maxLength={256}
+						minLength={1}
+						name="password"
+						placeholder="Enter your desired password"
+						type="password"
 					/>
 					{state.error && <p>{state.errorMessage}</p>}
 					<Button color="primary" type="submit">

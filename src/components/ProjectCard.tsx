@@ -21,7 +21,7 @@ const ProjectCard: FCC<{ project: ApprovedProject }> = ({ project }) => (
 		<CardHeader className="flex flex-row items-center">
 			<p className="grow-1 text-xl">{project.name}</p>
 			<Avatar
-				name={project.uploader.name}
+				name={project.uploader.name || undefined}
 				showFallback
 				src={project.uploader.profilePicture || undefined}
 			/>

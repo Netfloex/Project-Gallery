@@ -1,11 +1,14 @@
 "use server"
 
-import { registeredUsernamesFile } from "@utils/config"
+import prisma from "@lib/prisma"
+import { registeredStudentNumbersFile } from "@utils/config"
+import { hashPassword } from "@utils/password"
 import { readLines } from "@utils/readLines"
 import { z } from "zod"
 
 const RegisterSchema = z.object({
-	username: z.string().min(1).max(20),
+	studentNumber: z.string().min(2).max(20),
+	password: z.string().min(1).max(256),
 })
 
 interface RegisteredResponse {
@@ -46,25 +49,51 @@ export const register = async (
 			errorMessage:
 				validatedFields.error
 					.flatten()
-					.fieldErrors.username?.join(", ") ?? "Unknown error",
+					.fieldErrors.studentNumber?.join(", ") ?? "Unknown error",
 		}
 	}
 
-	const { username } = validatedFields.data
+	const { studentNumber, password } = validatedFields.data
 
-	const registrableUsernames = await readLines(registeredUsernamesFile)
+	const registrableStudentNumbers = await readLines(
+		registeredStudentNumbersFile,
+	)
 
-	if (registrableUsernames.includes(username.toLowerCase())) {
-		return {
-			success: true,
-			error: false,
-		}
-	} else {
+	// Check if student number is in the list.
+	if (!registrableStudentNumbers.includes(studentNumber.toLowerCase()))
 		return {
 			success: false,
 			error: true,
 			errorMessage:
 				"Username is not in the list of registrable usernames",
 		}
-	}
+
+	const foundStudentNumber = await prisma.user
+		.findUnique({
+			where: { studentNumber: studentNumber },
+		})
+		.then((user) => user !== null)
+		.catch(() => false)
+
+	// Check if a user with this student number already exists.
+	if (foundStudentNumber)
+		return {
+			success: false,
+			error: true,
+			errorMessage: "A user with this student number already exists",
+		}
+
+	return await prisma.user
+		.create({
+			data: {
+				studentNumber: studentNumber,
+				password: await hashPassword(password),
+			},
+		})
+		.then(() => ({ success: true, error: false }) as RegisteredResponse)
+		.catch((error) => ({
+			success: false,
+			error: true,
+			errorMessage: error.toString(),
+		}))
 }
