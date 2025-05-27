@@ -15,8 +15,12 @@ const RootLayout: FCC = ({ children }) => (
 			<meta content="width=device-width" name="viewport" />
 		</head>
 		<body>
-			<Header />
-			<Providers>{children}</Providers>
+			<Providers>
+				<div className="flex min-h-screen flex-col">
+					<Header />
+					{children}
+				</div>
+			</Providers>
 		</body>
 	</html>
 )

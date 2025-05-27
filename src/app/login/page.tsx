@@ -4,7 +4,15 @@ import { login } from "./actions/login"
 import { useRouter } from "next/navigation"
 import { useActionState, useEffect } from "react"
 
-import { Button, Card, CardBody, CardHeader, Form, Input } from "@heroui/react"
+import {
+	Alert,
+	Button,
+	Card,
+	CardBody,
+	CardHeader,
+	Form,
+	Input,
+} from "@heroui/react"
 
 import type { FC } from "react"
 
@@ -21,8 +29,8 @@ const Register: FC = () => {
 	}, [state.success, router])
 
 	return (
-		<div className="container mx-auto">
-			<Card className="mx-auto w-1/2">
+		<div className="container mx-auto my-auto px-4">
+			<Card className="mx-auto w-full lg:w-1/3">
 				<CardHeader className="justify-center">
 					<p className="text-3xl">Login</p>
 				</CardHeader>
@@ -60,8 +68,11 @@ const Register: FC = () => {
 							placeholder="Enter your password"
 							type="password"
 						/>
-						{state.error && state.errorMessage}
+						{state.error && (
+							<Alert color="danger" title={state.errorMessage} />
+						)}
 						<Button
+							className="w-full"
 							color="primary"
 							isLoading={pending}
 							type="submit"
