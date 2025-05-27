@@ -38,6 +38,7 @@
 		"eslint-plugin-prettier": "^5.2.3",
 		"framer-motion": "^12.4.10",
 		"husky": "^9.1.7",
+		"iron-session": "^8.0.4",
 		"next": "^15.2.1",
 		"postcss": "^8.5.3",
 		"prettier": "^3.5.3",

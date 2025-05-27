@@ -1,17 +1,24 @@
 "use client"
 
 import { register } from "./actions/register"
-import { useActionState } from "react"
+import { useRouter } from "next/navigation"
+import { useActionState, useEffect } from "react"
 
 import { Button, Card, CardBody, CardHeader, Form, Input } from "@heroui/react"
 
 import type { FC } from "react"
 
 const Register: FC = () => {
-	const [state, action] = useActionState(register, {
+	const [state, action, pending] = useActionState(register, {
 		success: false,
 		error: false,
 	})
+
+	const router = useRouter()
+
+	useEffect(() => {
+		if (state.success) router.push("/user")
+	}, [state.success, router])
 
 	return (
 		<Card>
@@ -50,7 +57,7 @@ const Register: FC = () => {
 						type="password"
 					/>
 					{state.error && <p>{state.errorMessage}</p>}
-					<Button color="primary" type="submit">
+					<Button color="primary" isLoading={pending} type="submit">
 						Submit
 					</Button>
 				</Form>

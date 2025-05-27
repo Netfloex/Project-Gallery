@@ -2,6 +2,7 @@
 
 import prisma from "@lib/prisma"
 import { checkPassword } from "@utils/password"
+import * as session from "@utils/session"
 import { z } from "zod"
 
 const LoginSchema = z.object({
@@ -62,10 +63,7 @@ export const login = async (
 					errorMessage: "Invalid student number or password",
 				} as ErrorResponse
 
-			const validPassword = await checkPassword(
-				password,
-				user?.password,
-			).catch(() => false)
+			const validPassword = await checkPassword(password, user.password)
 
 			if (!validPassword)
 				return {
@@ -73,6 +71,8 @@ export const login = async (
 					error: true,
 					errorMessage: "Invalid student number or password",
 				} as ErrorResponse
+
+			await session.login(user.studentNumber, user)
 
 			return { success: true, error: false } as LoggedInResponse
 		})

@@ -4,6 +4,7 @@ import prisma from "@lib/prisma"
 import { registeredStudentNumbersFile } from "@utils/config"
 import { hashPassword } from "@utils/password"
 import { readLines } from "@utils/readLines"
+import * as session from "@utils/session"
 import { z } from "zod"
 
 const RegisterSchema = z.object({
@@ -90,7 +91,11 @@ export const register = async (
 				password: await hashPassword(password),
 			},
 		})
-		.then(() => ({ success: true, error: false }) as RegisteredResponse)
+		.then(async (user) => {
+			await session.login(user.studentNumber, user)
+
+			return { success: true, error: false } as RegisteredResponse
+		})
 		.catch((error) => ({
 			success: false,
 			error: true,

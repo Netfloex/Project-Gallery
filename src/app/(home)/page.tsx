@@ -27,57 +27,56 @@ const Home: FC = async () => {
 
 	const newlyUploadedProjects = await getNewlyUploadedProjectsCached()
 
+	const lists = [
+		{
+			name: "Highest voted projects",
+			items: topVotedProjects,
+			link: "/projects?sort=votes-desc",
+		},
+		{
+			name: "Newly uploaded projects",
+			items: newlyUploadedProjects,
+			link: "/projects?sort=date-desc",
+		},
+	]
+
 	return (
 		<div className="container mx-auto flex flex-col gap-8">
 			<h1 className="text-center text-6xl">Project Gallery</h1>
 
 			<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-				<div className="flex grow-1 flex-col gap-4">
-					<p className="text-center text-3xl">
-						Highest voted projects
-					</p>
-					<ScrollShadow className="h-[600px]">
-						<div className="flex flex-col gap-4">
-							{topVotedProjects.length !== 0 &&
-								topVotedProjects.map((project) => (
-									<ProjectCard
-										key={project.id}
-										project={project}
-									/>
-								))}
-						</div>
-					</ScrollShadow>
-					<Button
-						as={Link}
-						color="primary"
-						href="/projects?sort=votes-desc"
+				{lists.map((project) => (
+					<div
+						className="flex grow-1 flex-col gap-4"
+						key={project.name}
 					>
-						See all
-					</Button>
-				</div>
-				<div className="flex grow-1 flex-col gap-4">
-					<p className="text-center text-3xl">
-						Newly uploaded projects
-					</p>
-					<ScrollShadow className="h-[600px]">
-						<div className="flex flex-col gap-4">
-							{newlyUploadedProjects.length !== 0 &&
-								newlyUploadedProjects.map((project) => (
-									<ProjectCard
-										key={project.id}
-										project={project}
-									/>
-								))}
-						</div>
-					</ScrollShadow>
-					<Button
-						as={Link}
-						color="primary"
-						href="/projects?sort=date-desc"
-					>
-						See all
-					</Button>
-				</div>
+						<p className="text-center text-3xl">{project.name}</p>
+						{project.items.length !== 0 && (
+							<>
+								<ScrollShadow className="h-[600px]">
+									<div className="flex flex-col gap-4">
+										{project.items.map((project) => (
+											<ProjectCard
+												key={project.id}
+												project={project}
+											/>
+										))}
+									</div>
+								</ScrollShadow>
+								<Button
+									as={Link}
+									color="primary"
+									href={project.link}
+								>
+									See all
+								</Button>
+							</>
+						)}
+						{project.items.length === 0 && (
+							<h1 className="text-center">No projects yet</h1>
+						)}
+					</div>
+				))}
 			</div>
 		</div>
 	)

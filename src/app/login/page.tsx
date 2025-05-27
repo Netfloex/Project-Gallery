@@ -1,17 +1,24 @@
 "use client"
 
 import { login } from "./actions/login"
-import { useActionState } from "react"
+import { useRouter } from "next/navigation"
+import { useActionState, useEffect } from "react"
 
 import { Button, Card, CardBody, CardHeader, Form, Input } from "@heroui/react"
 
 import type { FC } from "react"
 
 const Register: FC = () => {
-	const [state, action] = useActionState(login, {
+	const [state, action, pending] = useActionState(login, {
 		success: false,
 		error: false,
 	})
+
+	const router = useRouter()
+
+	useEffect(() => {
+		if (state.success) router.push("/user")
+	}, [state.success, router])
 
 	return (
 		<div className="container mx-auto">
@@ -54,7 +61,11 @@ const Register: FC = () => {
 							type="password"
 						/>
 						{state.error && state.errorMessage}
-						<Button color="primary" type="submit">
+						<Button
+							color="primary"
+							isLoading={pending}
+							type="submit"
+						>
 							Login
 						</Button>
 					</Form>
