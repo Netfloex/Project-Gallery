@@ -30,11 +30,11 @@ const Register: FC = () => {
 										: "default"
 							}
 							isRequired
-							label="Username"
+							label="Student Number"
 							maxLength={20}
 							minLength={2}
-							name="username"
-							placeholder="Enter your given username"
+							name="studentNumber"
+							placeholder="Enter your given student number"
 						/>
 
 						<Input
@@ -53,6 +53,7 @@ const Register: FC = () => {
 							placeholder="Enter your password"
 							type="password"
 						/>
+						{state.error && state.errorMessage}
 						<Button color="primary" type="submit">
 							Login
 						</Button>

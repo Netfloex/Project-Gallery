@@ -44,7 +44,7 @@ const Register: FC = () => {
 						isRequired
 						label="Password"
 						maxLength={256}
-						minLength={1}
+						minLength={8}
 						name="password"
 						placeholder="Enter your desired password"
 						type="password"

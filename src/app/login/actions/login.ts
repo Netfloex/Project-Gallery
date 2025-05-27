@@ -1,9 +1,11 @@
 "use server"
 
+import prisma from "@lib/prisma"
+import { checkPassword } from "@utils/password"
 import { z } from "zod"
 
 const LoginSchema = z.object({
-	username: z.string().min(1).max(20),
+	studentNumber: z.string().min(1).max(20),
 	password: z.string().min(8).max(256),
 })
 
@@ -42,18 +44,41 @@ export const login = async (
 			errorMessage:
 				validatedFields.error
 					.flatten()
-					.fieldErrors.username?.join(", ") ?? "Unknown error",
+					.fieldErrors.studentNumber?.join(", ") ?? "Unknown error",
 		}
 	}
 
-	const { username, password } = validatedFields.data
+	const { studentNumber, password } = validatedFields.data
 
-	console.log(
-		`Logging in with username: ${username} and password: ${password}`,
-	)
+	return await prisma.user
+		.findUnique({
+			where: { studentNumber: studentNumber },
+		})
+		.then(async (user) => {
+			if (user === null)
+				return {
+					success: false,
+					error: true,
+					errorMessage: "Invalid student number or password",
+				} as ErrorResponse
 
-	return {
-		success: true,
-		error: false,
-	}
+			const validPassword = await checkPassword(
+				password,
+				user?.password,
+			).catch(() => false)
+
+			if (!validPassword)
+				return {
+					success: false,
+					error: true,
+					errorMessage: "Invalid student number or password",
+				} as ErrorResponse
+
+			return { success: true, error: false } as LoggedInResponse
+		})
+		.catch((error) => ({
+			success: false,
+			error: true,
+			errorMessage: error.toString(),
+		}))
 }

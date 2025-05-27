@@ -8,7 +8,7 @@ import { z } from "zod"
 
 const RegisterSchema = z.object({
 	studentNumber: z.string().min(2).max(20),
-	password: z.string().min(1).max(256),
+	password: z.string().min(8).max(256),
 })
 
 interface RegisteredResponse {
