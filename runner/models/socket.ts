@@ -1,10 +1,10 @@
-export type ServerLine = {
+export type ServerData = {
 	id: number
 	content: string
 }
 
 export interface ServerToClientEvents {
-	newLine: (message: ServerLine) => void
+	data: (message: ServerData) => void
 }
 
 export type ClientToServerEvents = {

@@ -1,9 +1,9 @@
 import { randomInt } from "crypto"
 
+import { PythonShell } from "./lib/PythonShell"
 import { startServer } from "./lib/startServer"
 import { writeTmpFile } from "./utils/writeFile"
 import { PrismaClient } from "@prisma/client"
-import { PythonShell } from "python-shell"
 import { z } from "zod"
 
 const ProjectIdSchema = z.coerce.number().int().positive()
@@ -54,28 +54,28 @@ io.on("connection", async (socket) => {
 
 	console.log("Project found:", project)
 
-	socket.emit("newLine", {
+	socket.emit("data", {
 		id: id(),
-		content: `Running project: ${project.name} (ID: ${project.id})`,
+		content: `Running project: ${project.name} (ID: ${project.id})\n`,
 	})
 
 	const projectFile = await writeTmpFile(project.files[0].contents)
 
-	const pythonShell = new PythonShell(projectFile, {})
+	const pythonShell = new PythonShell(projectFile)
 
-	pythonShell.on("message", (message: string) => {
-		console.log("Python message:", message)
-		socket.emit("newLine", {
+	pythonShell.on("data", (data: string) => {
+		console.log("Python message:", data)
+		socket.emit("data", {
 			id: id(),
-			content: message,
+			content: data,
 		})
 	})
 
 	pythonShell.on("close", () => {
 		console.log("Python script finished")
-		socket.emit("newLine", {
+		socket.emit("data", {
 			id: id(),
-			content: "Python script finished",
+			content: "Python script finished\n",
 		})
 		socket.disconnect(true)
 	})

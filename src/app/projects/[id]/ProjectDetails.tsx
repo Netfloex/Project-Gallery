@@ -69,27 +69,20 @@ export const ProjectDetails: FC<{ project: ApprovedProject }> = ({
 					</CardHeader>
 					<CardBody>
 						<ScrollShadow className="h-[400px]" ref={consoleRef}>
-							<table>
-								<tbody>
-									{lines.map((line) => (
-										<tr key={line.id}>
-											<td className="">
-												<div
-													className={
-														("isMe" in line
-															? "bg-blue-500"
-															: "bg-gray-500") +
-														" mr-2 rounded-full p-1.5"
-													}
-												/>
-											</td>
-											<td>
-												<pre>{line.content}</pre>
-											</td>
-										</tr>
-									))}
-								</tbody>
-							</table>
+							<pre>
+								{lines.map((l) => (
+									<span
+										className={
+											"isMe" in l
+												? "text-blue-500"
+												: undefined
+										}
+										key={l.id}
+									>
+										{l.content}
+									</span>
+								))}
+							</pre>
 						</ScrollShadow>
 					</CardBody>
 				</Card>

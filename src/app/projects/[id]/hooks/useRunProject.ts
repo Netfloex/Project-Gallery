@@ -1,6 +1,6 @@
 import {
 	ClientToServerEvents,
-	ServerLine,
+	ServerData,
 	ServerToClientEvents,
 } from "../../../../../runner/models/socket"
 import { runnerSocketUrl } from "@utils/config"
@@ -9,13 +9,13 @@ import { io, Socket } from "socket.io-client"
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>
 
-interface ClientLine {
+interface ClientData {
 	id: number
 	content: string
 	isMe: true
 }
 
-type Line = ClientLine | ServerLine
+type Line = ClientData | ServerData
 
 export enum SocketStatus {
 	Connected,
@@ -72,14 +72,14 @@ export const useRunProject = (projectId: number): UseRunProjectReturn => {
 			setSocketStatus(SocketStatus.Disconnected)
 		})
 
-		socket.on("newLine", (message) => {
+		socket.on("data", (message) => {
 			setLines((prevLines) => [...prevLines, message])
 		})
 
 		return (): void => {
 			socket.off("connect")
 			socket.off("disconnect")
-			socket.off("newLine")
+			socket.off("data")
 
 			socket.disconnect()
 			setSocketStatus(SocketStatus.Disconnected)
@@ -88,12 +88,14 @@ export const useRunProject = (projectId: number): UseRunProjectReturn => {
 
 	const sendMessage = (message: string): void => {
 		if (socket) {
-			socket.emit("sendMessage", message)
+			const msg = message + "\n"
+
+			socket.emit("sendMessage", msg)
 
 			setLines((prevLines) => [
 				...prevLines,
 				{
-					content: message,
+					content: msg,
 					id: Date.now(),
 					isMe: true,
 				},
