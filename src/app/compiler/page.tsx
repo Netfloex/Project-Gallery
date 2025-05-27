@@ -10,6 +10,8 @@ import {
 	CardHeader,
 	Chip,
 	Input,
+	Listbox,
+	ListboxItem,
 	ScrollShadow,
 } from "@heroui/react"
 
@@ -33,10 +35,16 @@ const Compiler: FC = () => {
 	const [running, setRunning] = useState<boolean>(false)
 	const [errorMsg, setErrorMsg] = useState<string | null>(null)
 	const consoleRef = useRef<HTMLPreElement>(null)
+	const [files, setFiles] = useState<string[]>([])
 
 	// Initialize WebSocket connection
 	useEffect(() => {
 		const websocket = new WebSocket(wsUrl)
+
+		fetch("/api/python-projects")
+			.then((res) => res.json())
+			.then((data) => setFiles(data.files || []))
+			.catch(console.error)
 
 		websocket.onopen = () => {
 			console.log("WebSocket connected to compiler")
@@ -130,59 +138,93 @@ const Compiler: FC = () => {
 	}
 
 	return (
-		<Card>
-			<CardHeader>Python Compiler</CardHeader>
-			<CardBody>
-				<Input
-					className="mb-2"
-					disabled={running}
-					onChange={(e) => setScriptName(e.target.value.trim())}
-					placeholder="Enter filename (e.g., test.py)"
-					value={scriptName}
-				/>
+		<div className="flex gap-4 p-4">
+			<Card className="flex-1">
+				<CardHeader>Python Compiler</CardHeader>
+				<CardBody>
+					<Input
+						className="mb-2"
+						disabled={running}
+						onChange={(e) => setScriptName(e.target.value.trim())}
+						placeholder="Enter filename (e.g., test.py)"
+						value={scriptName}
+					/>
 
-				<Button
-					className="mb-2"
-					disabled={running}
-					onClick={startScript}
-				>
-					{running ? "Running..." : "Start"}
-				</Button>
-
-				{errorMsg && (
-					<Chip className="mb-2" color="danger">
-						{errorMsg}
-					</Chip>
-				)}
-
-				{running && (
-					<>
-						<Input
-							className="mb-2"
-							onChange={(e) => setUserInput(e.target.value)}
-							onKeyPress={(e) => e.key === "Enter" && sendInput()}
-							placeholder="Enter input"
-							value={userInput}
-						/>
-						<Button className="mr-2" onClick={sendInput}>
-							Send Input
-						</Button>
-						<Button color="danger" onClick={terminateScript}>
-							Terminate
-						</Button>
-					</>
-				)}
-
-				<ScrollShadow>
-					<pre
-						className="mt-4 h-64 overflow-auto rounded bg-black p-2 whitespace-pre-wrap text-white"
-						ref={consoleRef}
+					<Button
+						className="mb-2"
+						disabled={running}
+						onClick={startScript}
 					>
-						{output || "[No output yet]"}
-					</pre>
-				</ScrollShadow>
-			</CardBody>
-		</Card>
+						{running ? "Running..." : "Start"}
+					</Button>
+
+					{errorMsg && (
+						<Chip className="mb-2" color="danger">
+							{errorMsg}
+						</Chip>
+					)}
+
+					{running && (
+						<>
+							<Input
+								className="mb-2"
+								onChange={(e) => setUserInput(e.target.value)}
+								onKeyPress={(e) =>
+									e.key === "Enter" && sendInput()
+								}
+								placeholder="Enter input"
+								value={userInput}
+							/>
+							<Button className="mr-2" onClick={sendInput}>
+								Send Input
+							</Button>
+							<Button color="danger" onClick={terminateScript}>
+								Terminate
+							</Button>
+						</>
+					)}
+
+					<ScrollShadow>
+						<pre
+							className="mt-4 h-64 overflow-auto rounded bg-black p-2 whitespace-pre-wrap text-white"
+							ref={consoleRef}
+							role="log"
+						>
+							{output || "[No output yet]"}
+						</pre>
+					</ScrollShadow>
+				</CardBody>
+			</Card>
+			<Card className="w-64">
+				<Listbox
+					aria-label="Python files"
+					bottomContent={
+						<div className="p-2 text-sm text-gray-500">
+							Total: {files.length} files
+						</div>
+					}
+					topContent={
+						<div className="border-b p-2 font-bold">
+							Python Projects
+						</div>
+					}
+				>
+					{files.length > 0 ? (
+						<>
+							{files.map((file) => (
+								<ListboxItem className="px-2 py-1.5" key={file}>
+									{file}
+								</ListboxItem>
+							))}
+						</>
+					) : (
+						<ListboxItem className="px-2 py-1.5 text-gray-400">
+							No files found
+						</ListboxItem>
+					)}
+				</Listbox>
+			</Card>
+		</div>
 	)
 }
 
