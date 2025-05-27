@@ -34,9 +34,9 @@ export const Footer: FC = () => (
 							</Link>
 							<Link
 								className="text-default-300 transition-opacity hover:opacity-75"
-								href="/compiler"
+								href="/runner"
 							>
-								Compiler
+								Run Projects
 							</Link>
 						</div>
 					</div>

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 "use client"
 
 import React, { FC, useEffect, useRef, useState } from "react"
@@ -15,18 +14,17 @@ import {
 	ScrollShadow,
 } from "@heroui/react"
 
-type CompilerMessage = {
+type RunnerMessage = {
 	output?: string
 	error?: string
 	closed?: boolean
 }
 
-const isValidScriptName = (name: string) => /^[\w-]+\.py$/.test(name)
+const isValidScriptName = (name: string): boolean => /^[\w-]+\.py$/.test(name)
 
-const Compiler: FC = () => {
-	// WebSocket URL: can override via NEXT_PUBLIC_COMPILER_WS
+const Runner: FC = () => {
 	const wsUrl =
-		process.env.NEXT_PUBLIC_COMPILER_WS || "ws://localhost:3002/ws/compiler"
+		process.env.NEXT_PUBLIC_RUNNER_WS || "ws://localhost:3002/ws/runner"
 
 	const [scriptName, setScriptName] = useState<string>("")
 	const [userInput, setUserInput] = useState<string>("")
@@ -46,13 +44,13 @@ const Compiler: FC = () => {
 			.then((data) => setFiles(data.files || []))
 			.catch(console.error)
 
-		websocket.onopen = () => {
-			console.log("WebSocket connected to compiler")
+		websocket.onopen = (): void => {
+			console.log("WebSocket connected")
 			setErrorMsg(null)
 		}
 
-		websocket.onmessage = (event: MessageEvent) => {
-			let data: CompilerMessage
+		websocket.onmessage = (event: MessageEvent): void => {
+			let data: RunnerMessage
 
 			try {
 				data = JSON.parse(event.data)
@@ -67,12 +65,12 @@ const Compiler: FC = () => {
 			if (data.closed) setRunning(false)
 		}
 
-		websocket.onerror = (evt) => {
+		websocket.onerror = (evt): void => {
 			console.error("WebSocket error", evt)
 			setErrorMsg("Connection error, please check server or URL.")
 		}
 
-		websocket.onclose = (evt) => {
+		websocket.onclose = (evt): void => {
 			console.warn("WebSocket closed", evt.reason)
 			setRunning(false)
 			setWs(null)
@@ -80,7 +78,9 @@ const Compiler: FC = () => {
 
 		setWs(websocket)
 
-		return () => websocket.close()
+		return (): void => {
+			websocket.close()
+		}
 	}, [wsUrl])
 
 	// Auto-scroll console
@@ -140,13 +140,13 @@ const Compiler: FC = () => {
 	return (
 		<div className="flex gap-4 p-4">
 			<Card className="flex-1">
-				<CardHeader>Python Compiler</CardHeader>
+				<CardHeader>Run your projects here!</CardHeader>
 				<CardBody>
 					<Input
 						className="mb-2"
 						disabled={running}
 						onChange={(e) => setScriptName(e.target.value.trim())}
-						placeholder="Enter filename (e.g., test.py)"
+						placeholder="Enter filename (e.g., quiz.py)"
 						value={scriptName}
 					/>
 
@@ -214,13 +214,13 @@ const Compiler: FC = () => {
 							{files.map((file) => (
 								<ListboxItem
 									className="cursor-pointer px-2 py-1.5 hover:bg-gray-100"
-									key={file} // TODO: hier de gebruikers naam ipv het bestandsnaam
+									key={file}
 									onPress={() => {
 										if (running) {
-											terminateScript() // Stop current script first
+											terminateScript()
 										}
 
-										setScriptName(file) // Then update the input field
+										setScriptName(file)
 									}}
 								>
 									{file}
@@ -238,4 +238,4 @@ const Compiler: FC = () => {
 	)
 }
 
-export default Compiler
+export default Runner

@@ -19,7 +19,7 @@ export const Header: FC = () => (
 		</NavbarBrand>
 		<NavbarContent justify="end">
 			<NavbarItem className="hidden lg:flex">
-				<Link href="/compiler">Compiler</Link>
+				<Link href="/runner">Run Projects</Link>
 			</NavbarItem>
 			<NavbarItem className="hidden lg:flex">
 				<Link href="/login">Login</Link>
