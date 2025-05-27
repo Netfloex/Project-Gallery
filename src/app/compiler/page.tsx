@@ -212,7 +212,17 @@ const Compiler: FC = () => {
 					{files.length > 0 ? (
 						<>
 							{files.map((file) => (
-								<ListboxItem className="px-2 py-1.5" key={file}>
+								<ListboxItem
+									className="cursor-pointer px-2 py-1.5 hover:bg-gray-100"
+									key={file} // TODO: hier de gebruikers naam ipv het bestandsnaam
+									onPress={() => {
+										if (running) {
+											terminateScript() // Stop current script first
+										}
+
+										setScriptName(file) // Then update the input field
+									}}
+								>
 									{file}
 								</ListboxItem>
 							))}
