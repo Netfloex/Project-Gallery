@@ -1,11 +1,13 @@
 **
 
 !/src/**
+!/runner
 !/public
 !/prisma
 !/package.json
 !/yarn.lock
 !/next.config.ts
 !/tsconfig.json
+!/runner.tsconfig.json
 !/tailwind.config.ts
 !/postcss.config.mjs

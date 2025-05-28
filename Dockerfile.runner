@@ -1,0 +1,19 @@
+ARG NODE_IMAGE=node:22-alpine
+
+FROM $NODE_IMAGE AS runner
+
+ENV NODE_ENV=production
+ENV STORE_PATH=/data/store.json
+ENV FORCE_COLOR=1
+
+COPY package.json yarn.lock .
+
+RUN yarn install --frozen-lockfile --ignore-scripts --production
+
+COPY . .
+
+RUN yarn run db:generate
+
+RUN apk add python3
+
+CMD "yarn" "run" "runner"

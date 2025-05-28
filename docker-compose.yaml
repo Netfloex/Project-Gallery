@@ -25,6 +25,24 @@ services:
 
         command: postgres -c listen_addresses='*'
 
+    runner:
+        build:
+            context: .
+            dockerfile: Dockerfile.runner
+        container_name: "project-gallery-runner"
+
+        networks:
+            - project-gallery
+
+        depends_on:
+            - postgres
+
+        environment:
+            DATABASE_URL: "postgresql://postgres:postgres@project-gallery-db:5432/postgres?schema=public"
+
+        ports:
+            - 4000:4000
+
     app:
         build: .
         container_name: "project-gallery"
