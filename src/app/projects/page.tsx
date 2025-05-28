@@ -41,7 +41,7 @@ const Dashboard: NextPage<{
 
 	return (
 		<Suspense fallback={<LoadingPage />}>
-			<div className="container mx-auto flex flex-col gap-4 p-4">
+			<div className="container mx-auto flex flex-grow flex-col gap-4 p-4">
 				<Toolbar
 					searchError={searchError}
 					searchQuery={query}

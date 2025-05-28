@@ -4,7 +4,15 @@ import { register } from "./actions/register"
 import { useRouter } from "next/navigation"
 import { useActionState, useEffect } from "react"
 
-import { Button, Card, CardBody, CardHeader, Form, Input } from "@heroui/react"
+import {
+	Alert,
+	Button,
+	Card,
+	CardBody,
+	CardHeader,
+	Form,
+	Input,
+} from "@heroui/react"
 
 import type { FC } from "react"
 
@@ -59,7 +67,9 @@ const Register: FC = () => {
 							placeholder="Enter your desired password"
 							type="password"
 						/>
-						{state.error && <p>{state.errorMessage}</p>}
+						{state.error && (
+							<Alert color="danger" title={state.errorMessage} />
+						)}
 						<Button
 							className="w-full"
 							color="primary"

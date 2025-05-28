@@ -1,6 +1,7 @@
 import { readFileSync } from "fs"
 
 import { PrismaClient } from "@prisma/client"
+import { hashPassword } from "@utils/password"
 
 const prisma = new PrismaClient()
 
@@ -8,7 +9,11 @@ export const main = async (): Promise<void> => {
 	const defaultStudentNumber = "s12345678"
 
 	await prisma.user.create({
-		data: { studentNumber: defaultStudentNumber, password: "" },
+		data: {
+			studentNumber: defaultStudentNumber,
+			name: "Test User 123",
+			password: await hashPassword("test"),
+		},
 	})
 
 	await prisma.project.create({
