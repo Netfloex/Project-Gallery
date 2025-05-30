@@ -1,7 +1,7 @@
 import { readFileSync } from "fs"
 
+import { hashPassword } from "../src/utils/password"
 import { PrismaClient } from "@prisma/client"
-import { hashPassword } from "@utils/password"
 
 const prisma = new PrismaClient()
 
@@ -12,7 +12,7 @@ export const main = async (): Promise<void> => {
 		data: {
 			studentNumber: defaultStudentNumber,
 			name: "Test User 123",
-			password: await hashPassword("test"),
+			password: await hashPassword("testtest"),
 		},
 	})
 

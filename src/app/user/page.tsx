@@ -1,0 +1,14 @@
+import { UserDetails } from "./UserDetails"
+import * as session from "@utils/session"
+import { NextPage } from "next"
+import { redirect } from "next/navigation"
+
+const User: NextPage = async () => {
+	const sessionData = await session.get()
+
+	if (sessionData === null) redirect("/login")
+
+	return <UserDetails user={sessionData.user} />
+}
+
+export default User

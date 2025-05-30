@@ -1,10 +1,10 @@
 "use client"
 
+import { ProfilePicture } from "./ProfilePicture"
 import Link from "next/link"
 import { format } from "timeago.js"
 
 import {
-	Avatar,
 	Button,
 	Card,
 	CardBody,
@@ -20,11 +20,7 @@ const ProjectCard: FCC<{ project: ApprovedProject }> = ({ project }) => (
 	<Card>
 		<CardHeader className="flex flex-row items-center">
 			<p className="grow-1 text-xl">{project.name}</p>
-			<Avatar
-				name={project.uploader.name || undefined}
-				showFallback
-				src={project.uploader.profilePicture || undefined}
-			/>
+			<ProfilePicture user={project.uploader} />
 		</CardHeader>
 
 		<Divider />

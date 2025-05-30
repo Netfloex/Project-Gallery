@@ -7,24 +7,33 @@ CREATE TABLE "User" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "password" TEXT NOT NULL,
     "name" TEXT,
-    "profilePicture" TEXT,
     "role" "Role" NOT NULL DEFAULT 'USER',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("studentNumber")
 );
 
 -- CreateTable
-CREATE TABLE "ProfileUpdateRequest" (
+CREATE TABLE "ProfilePicture" (
     "id" SERIAL NOT NULL,
+    "ownerStudentNumber" TEXT NOT NULL,
+    "data" BYTEA NOT NULL,
+
+    CONSTRAINT "ProfilePicture_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ProfileUpdateRequest" (
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "newName" TEXT,
-    "profilePicture" TEXT,
+    "profilePicture" BYTEA,
     "requesterStudentNumber" TEXT NOT NULL,
 
-    CONSTRAINT "ProfileUpdateRequest_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "ProfileUpdateRequest_pkey" PRIMARY KEY ("requesterStudentNumber")
 );
 
 -- CreateTable
 CREATE TABLE "Vote" (
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "projectId" INTEGER NOT NULL,
     "userStudentNumber" TEXT NOT NULL,
 
@@ -47,12 +56,19 @@ CREATE TABLE "Project" (
 -- CreateTable
 CREATE TABLE "File" (
     "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "name" TEXT NOT NULL,
     "contents" TEXT NOT NULL,
     "projectId" INTEGER NOT NULL,
 
     CONSTRAINT "File_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ProfilePicture_ownerStudentNumber_key" ON "ProfilePicture"("ownerStudentNumber");
+
+-- AddForeignKey
+ALTER TABLE "ProfilePicture" ADD CONSTRAINT "ProfilePicture_ownerStudentNumber_fkey" FOREIGN KEY ("ownerStudentNumber") REFERENCES "User"("studentNumber") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ProfileUpdateRequest" ADD CONSTRAINT "ProfileUpdateRequest_requesterStudentNumber_fkey" FOREIGN KEY ("requesterStudentNumber") REFERENCES "User"("studentNumber") ON DELETE RESTRICT ON UPDATE CASCADE;

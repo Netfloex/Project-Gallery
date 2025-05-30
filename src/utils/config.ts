@@ -4,6 +4,9 @@ export const registeredStudentNumbersFile =
 export const runnerSocketUrl =
 	process.env.NEXT_PUBLIC_SOCKET_URL ?? "http://localhost:4000"
 
+export const maxProfilePictureSize =
+	parseInt(process.env.MAX_PROFILE_PICTURE_SIZE ?? "") || 1 * 1024 * 1024
+
 export const sessionPassword = (): string => {
 	if (process.env.SESSION_PASSWORD === undefined)
 		console.warn(

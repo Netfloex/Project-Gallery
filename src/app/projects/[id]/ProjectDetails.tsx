@@ -12,8 +12,9 @@ import {
 	Form,
 	Input,
 	ScrollShadow,
-	User,
 } from "@heroui/react"
+
+import { ProfilePicture } from "@components/ProfilePicture"
 
 import { ApprovedProject } from "@typings/project"
 
@@ -50,17 +51,7 @@ export const ProjectDetails: FC<{ project: ApprovedProject }> = ({
 		<div className="flex flex-col gap-4 px-4">
 			<div className="flex flex-row gap-2">
 				<h1 className="flex-grow text-5xl">{project.name}</h1>
-				<User
-					avatarProps={{
-						src: project.uploader.profilePicture || undefined,
-						name: project.uploader.name || undefined,
-						showFallback: true,
-					}}
-					description={`Member since ${new Date(
-						project.uploader.createdAt,
-					).toDateString()}`}
-					name={project.uploader.name || "Unknown user"}
-				/>
+				<ProfilePicture user={project.uploader} />
 			</div>
 			<Divider />
 

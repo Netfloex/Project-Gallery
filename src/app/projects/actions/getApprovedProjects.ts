@@ -1,5 +1,6 @@
 import { SortOption } from "../page"
 import prisma from "@lib/prisma"
+import * as dbUtils from "@utils/db"
 
 import { ApprovedProject } from "@typings/project"
 
@@ -44,21 +45,5 @@ export const getApprovedProjects = async (
 		take: limit,
 
 		// Select only the required properties for a published project.
-		select: {
-			name: true,
-			id: true,
-			description: true,
-			createdAt: true,
-			uploader: {
-				select: {
-					name: true,
-					createdAt: true,
-					profilePicture: true,
-					role: true,
-				},
-			},
-			_count: {
-				select: { votes: true },
-			},
-		},
+		select: dbUtils.approvedProjectFilter,
 	})
