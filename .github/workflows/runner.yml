@@ -4,15 +4,11 @@ on:
     push:
         paths:
             - "prisma/**"
-            - "public/**"
-            - "src/**"
+            - "runner/**"
             - "tsconfig.json"
             - "package.json"
             - "yarn.lock"
-            - "next.config.*"
-            - "postcss.config.*"
-            - "tailwind.config.*"
-            - "Dockerfile"
+            - "Dockerfile.runner"
             - "docker-compose.yaml"
             - ".dockerignore"
             - ".github/workflows/matrix.yml"
@@ -22,23 +18,6 @@ on:
             - "v[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
-    tests:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Setup yarn and install dependencies
-              uses: netfloex/actions/yarn@master
-              with:
-                  node-version: 22.14.0
-
-            - name: Generate database models
-              run: yarn db:generate
-
-            - name: Check Types
-              run: yarn typescript
-
-            - name: Test ESLint
-              run: yarn lint
-
     docker:
         strategy:
             matrix:
@@ -49,7 +28,6 @@ jobs:
                       arch: arm64
 
         runs-on: ${{ matrix.os }}
-        needs: tests
 
         steps:
             - name: Docker meta
@@ -57,7 +35,7 @@ jobs:
               uses: docker/metadata-action@v4
               with:
                   images: |
-                      ${{ vars.REGISTRY_IMAGE }}
+                      ${{ vars.REGISTRY_IMAGE_RUNNER }}
                   tags: |
                       type=semver,pattern=v{{major}}.{{minor}}.{{patch}}
                       type=semver,pattern=v{{major}}.{{minor}}
@@ -79,7 +57,8 @@ jobs:
               with:
                   platforms: ${{ matrix.arch }}
                   labels: ${{ steps.meta.outputs.labels }}
-                  outputs: type=image,name=${{ vars.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
+                  outputs: type=image,name=${{ vars.REGISTRY_IMAGE_RUNNER }},push-by-digest=true,name-canonical=true,push=true
+                  file: Dockerfile.runner
 
                   cache-from: type=gha
                   cache-to: type=gha,mode=max
@@ -116,7 +95,7 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ vars.REGISTRY_IMAGE }}
+                  images: ${{ vars.REGISTRY_IMAGE_RUNNER }}
                   tags: |
                       type=semver,pattern=v{{major}}.{{minor}}.{{patch}}
                       type=semver,pattern=v{{major}}.{{minor}}
@@ -133,4 +112,4 @@ jobs:
               working-directory: /tmp/digests
               run: |
                   docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-                    $(printf '${{ vars.REGISTRY_IMAGE }}@sha256:%s ' *)
+                    $(printf '${{ vars.REGISTRY_IMAGE_RUNNER }}@sha256:%s ' *)
