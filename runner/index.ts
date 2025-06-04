@@ -32,7 +32,7 @@ io.on("connection", async (socket) => {
 	console.log("Project ID:", projectId)
 
 	const project = await prisma.project.findUnique({
-		where: { id: projectId },
+		where: { id: projectId, approved: true },
 		select: {
 			id: true,
 			name: true,

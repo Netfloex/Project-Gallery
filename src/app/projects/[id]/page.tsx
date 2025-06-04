@@ -2,6 +2,7 @@
 
 import { getApprovedProject } from "./actions/getApprovedProject"
 import { ProjectDetails } from "./ProjectDetails"
+import * as session from "@utils/session"
 import { NextPage } from "next"
 
 import ErrorPage from "@components/ErrorPage"
@@ -14,7 +15,12 @@ const ProjectPage: NextPage<{
 	const idParsed = parseInt(id)
 
 	if (!isNaN(idParsed)) {
-		const result = await getApprovedProject(idParsed)
+		const sessionData = await session.get()
+
+		const result = await getApprovedProject(
+			idParsed,
+			sessionData?.studentNumber,
+		)
 
 		if (result.success && result.project !== null)
 			return (

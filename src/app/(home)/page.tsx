@@ -11,11 +11,13 @@ const Home: FC = async () => {
 	const topVotedProjects = await getApprovedProjects(
 		"votes-desc",
 		undefined,
+		undefined,
 		5,
 	)
 
 	const newlyUploadedProjects = await getApprovedProjects(
 		"date-desc",
+		undefined,
 		undefined,
 		5,
 	)

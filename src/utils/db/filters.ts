@@ -16,6 +16,7 @@ export const approvedProjectFilter = {
 	id: true,
 	description: true,
 	createdAt: true,
+	approved: true,
 	uploader: {
 		select: publicUserFilter,
 	},

@@ -6,7 +6,7 @@ import { Project } from "@prisma/client"
  *
  * Can be used on the client side.
  */
-export type ApprovedProject = Pick<
+export type PublicProject = Pick<
 	Project,
-	"name" | "id" | "description" | "createdAt"
+	"name" | "id" | "description" | "createdAt" | "approved"
 > & { _count: { votes: number }; uploader: PublicUser }

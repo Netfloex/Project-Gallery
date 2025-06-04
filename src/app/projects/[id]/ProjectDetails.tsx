@@ -16,11 +16,9 @@ import {
 
 import { ProfilePicture } from "@components/ProfilePicture"
 
-import { ApprovedProject } from "@typings/project"
+import { PublicProject } from "@typings/project"
 
-export const ProjectDetails: FC<{ project: ApprovedProject }> = ({
-	project,
-}) => {
+export const ProjectDetails: FC<{ project: PublicProject }> = ({ project }) => {
 	const [messageInput, setMessageInput] = useState<string>("")
 
 	const {

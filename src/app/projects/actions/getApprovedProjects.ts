@@ -4,7 +4,7 @@ import { SortOption } from "../page"
 import prisma from "@lib/prisma"
 import * as dbUtils from "@utils/db"
 
-import { ApprovedProject } from "@typings/project"
+import { PublicProject } from "@typings/project"
 
 const isVotesSortOption = (sort: SortOption): boolean =>
 	sort === "votes-asc" || sort === "votes-desc"
@@ -12,13 +12,25 @@ const isVotesSortOption = (sort: SortOption): boolean =>
 export const getApprovedProjects = async (
 	sort: SortOption,
 	query?: string,
+	studentNumber?: string,
 	limit = 50,
-): Promise<ApprovedProject[]> =>
-	await prisma.project
+): Promise<PublicProject[]> => {
+	const whereClauses: {
+		approved: boolean
+		uploaderStudentNumber?: string
+	}[] = [{ approved: true }]
+
+	if (studentNumber)
+		whereClauses.push({
+			approved: false,
+			uploaderStudentNumber: studentNumber,
+		})
+
+	return await prisma.project
 		.findMany({
 			// Only projects that have been approved should be shown on the dashboard.
 			where: {
-				approved: true,
+				OR: whereClauses,
 				name:
 					query !== undefined
 						? { contains: query, mode: "insensitive" }
@@ -51,3 +63,4 @@ export const getApprovedProjects = async (
 			select: dbUtils.approvedProjectFilter,
 		})
 		.catch(() => [])
+}

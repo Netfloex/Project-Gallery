@@ -1,5 +1,6 @@
 import { getApprovedProjects } from "./actions/getApprovedProjects"
 import { Toolbar } from "./Toolbar"
+import * as session from "@utils/session"
 import { NextPage } from "next"
 import { Suspense } from "react"
 import { z } from "zod"
@@ -29,7 +30,13 @@ const Dashboard: NextPage<{
 	const sortOption = sortParamResult.data!
 	const sortOptionError = sortParamResult.error?.format()._errors.join("\n")
 
-	const projects = await getApprovedProjects(sortOption, query)
+	const sessionData = await session.get()
+
+	const projects = await getApprovedProjects(
+		sortOption,
+		query,
+		sessionData?.studentNumber,
+	)
 
 	return (
 		<div className="container mx-auto flex flex-grow flex-col gap-4 p-4">

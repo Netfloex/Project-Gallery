@@ -1,3 +1,4 @@
+import { getUserProjects } from "./actions/getUserProjects"
 import { UserDetails } from "./UserDetails"
 import * as session from "@utils/session"
 import { NextPage } from "next"
@@ -8,7 +9,16 @@ const User: NextPage = async () => {
 
 	if (sessionData === null) redirect("/login")
 
-	return <UserDetails user={sessionData.user} />
+	const getUserProjectResult = await getUserProjects(
+		sessionData.studentNumber,
+	)
+
+	return (
+		<UserDetails
+			projectResult={getUserProjectResult}
+			user={sessionData.user}
+		/>
+	)
 }
 
 export default User

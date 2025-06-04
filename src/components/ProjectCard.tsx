@@ -10,13 +10,14 @@ import {
 	CardBody,
 	CardFooter,
 	CardHeader,
+	Chip,
 	Divider,
 } from "@heroui/react"
 
 import { FCC } from "@typings/FCC"
-import { ApprovedProject } from "@typings/project"
+import { PublicProject } from "@typings/project"
 
-const ProjectCard: FCC<{ project: ApprovedProject }> = ({ project }) => (
+const ProjectCard: FCC<{ project: PublicProject }> = ({ project }) => (
 	<Card>
 		<CardHeader className="flex flex-row items-center">
 			<p className="grow-1 text-xl">{project.name}</p>
@@ -25,14 +26,17 @@ const ProjectCard: FCC<{ project: ApprovedProject }> = ({ project }) => (
 
 		<Divider />
 
-		<CardBody>
+		<CardBody className="gap-2">
+			<Chip color={project.approved ? "success" : "danger"}>
+				{project.approved ? "Approved" : "Not approved"}
+			</Chip>
 			<p className="line-clamp-3">{project.description}</p>
 		</CardBody>
 
 		<Divider />
 
-		<CardFooter className="gap-4">
-			<div className="flex grow-1 flex-row gap-4 text-sm">
+		<CardFooter className="gap-2">
+			<div className="flex grow-1 flex-row items-center gap-4 text-sm">
 				<p>{format(project.createdAt)}</p>
 
 				<p>{project._count.votes} votes</p>
