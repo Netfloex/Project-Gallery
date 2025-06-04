@@ -18,24 +18,22 @@ const getSessionData = async (): Promise<IronSession<StoredSessionData>> =>
 		cookieName: cookieName,
 	})
 
+const getUser = async (studentNumber: string): Promise<PublicUser | null> => {
+	"use cache"
+
+	return await prisma.user
+		.findUnique({
+			where: { studentNumber: studentNumber },
+			select: dbUtils.publicUserFilter,
+		})
+		.catch(() => null)
+}
+
 export const get = async (): Promise<SessionData | null> => {
 	const session = await getSessionData()
 
 	// If the session does not define when it is created, it does not exist.
 	if (session.created === undefined) return null
-
-	const getUser = async (
-		studentNumber: string,
-	): Promise<PublicUser | null> => {
-		"use cache"
-
-		return await prisma.user
-			.findUnique({
-				where: { studentNumber: studentNumber },
-				select: dbUtils.publicUserFilter,
-			})
-			.catch(() => null)
-	}
 
 	const user = await getUser(session.studentNumber)
 

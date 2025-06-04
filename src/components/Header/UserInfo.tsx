@@ -20,7 +20,9 @@ export const UserInfo: FC = async () => {
 			<NavbarItem>
 				<Dropdown>
 					<DropdownTrigger>
-						<ProfilePicture user={sessionData.user} />
+						<a>
+							<ProfilePicture user={sessionData.user} />
+						</a>
 					</DropdownTrigger>
 					<DropdownMenu aria-label="Static Actions">
 						<DropdownItem key="new">New file</DropdownItem>
