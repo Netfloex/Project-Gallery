@@ -1,8 +1,9 @@
-export const registeredStudentNumbersFile =
-	process.env.REGISTERED_STUDENT_NUMBERS_FILE ?? "data/users.txt"
+export const registrableStudentNumbersFile =
+	process.env.REGISTRABLE_STUDENT_NUMBERS_FILE ?? "data/users.txt"
+export const registrableCuratorsFile =
+	process.env.REGISTRABLE_STUDENT_NUMBERS_FILE ?? "data/curators.txt"
 
-export const runnerSocketUrl =
-	process.env.NEXT_PUBLIC_SOCKET_URL ?? "http://localhost:4000"
+export const runnerSocketUrl = process.env.NEXT_PUBLIC_SOCKET_URL
 
 export const maxProfilePictureSize =
 	parseInt(process.env.MAX_PROFILE_PICTURE_SIZE ?? "") || 1 * 1024 * 1024

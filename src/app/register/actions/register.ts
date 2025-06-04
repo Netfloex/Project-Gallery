@@ -1,7 +1,10 @@
 "use server"
 
 import prisma from "@lib/prisma"
-import { registeredStudentNumbersFile } from "@utils/config"
+import {
+	registrableCuratorsFile,
+	registrableStudentNumbersFile,
+} from "@utils/config"
 import { hashPassword } from "@utils/password"
 import { readLines } from "@utils/readLines"
 import * as session from "@utils/session"
@@ -57,11 +60,16 @@ export const register = async (
 	const { studentNumber, password } = validatedFields.data
 
 	const registrableStudentNumbers = await readLines(
-		registeredStudentNumbersFile,
+		registrableStudentNumbersFile,
 	)
+	const registrableCurators = await readLines(registrableCuratorsFile)
 
 	// Check if student number is in the list.
-	if (!registrableStudentNumbers.includes(studentNumber.toLowerCase()))
+	if (
+		![...registrableStudentNumbers, ...registrableCurators].includes(
+			studentNumber.toLowerCase(),
+		)
+	)
 		return {
 			success: false,
 			error: true,
@@ -84,11 +92,14 @@ export const register = async (
 			errorMessage: "A user with this student number already exists",
 		}
 
+	const isCurator = registrableCurators.includes(studentNumber.toLowerCase())
+
 	return await prisma.user
 		.create({
 			data: {
 				studentNumber: studentNumber,
 				password: await hashPassword(password),
+				role: isCurator ? "CURATOR" : "USER",
 			},
 		})
 		.then(async (user) => {
