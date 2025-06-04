@@ -95,7 +95,7 @@ jobs:
                   platforms: ${{ matrix.arch }}
                   labels: ${{ steps.meta.outputs.labels }}
                   outputs: type=image,name=${{ matrix.image }},push-by-digest=true,name-canonical=true,push=true
-                  file: "{context}/${{ matrix.dockerfile}}"
+                  file: ${{ matrix.dockerfile }}
                   cache-from: type=gha
                   cache-to: type=gha,mode=max
 
