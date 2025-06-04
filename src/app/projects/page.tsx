@@ -1,7 +1,6 @@
 import { getApprovedProjects } from "./actions/getApprovedProjects"
 import { Toolbar } from "./Toolbar"
 import { NextPage } from "next"
-import { unstable_cache } from "next/cache"
 import { Suspense } from "react"
 import { z } from "zod"
 
@@ -30,24 +29,17 @@ const Dashboard: NextPage<{
 	const sortOption = sortParamResult.data!
 	const sortOptionError = sortParamResult.error?.format()._errors.join("\n")
 
-	const getProjectsCached = unstable_cache(
-		async (query, sortOption) =>
-			await getApprovedProjects(sortOption, query),
-		[query ?? "", sortOption],
-		{ tags: ["approved-projects"], revalidate: 5 },
-	)
-
-	const projects = await getProjectsCached(query, sortOption)
+	const projects = await getApprovedProjects(sortOption, query)
 
 	return (
-		<Suspense fallback={<LoadingPage />}>
-			<div className="container mx-auto flex flex-grow flex-col gap-4 p-4">
-				<Toolbar
-					searchError={searchError}
-					searchQuery={query}
-					sortOption={sortOption}
-					sortOptionError={sortOptionError}
-				/>
+		<div className="container mx-auto flex flex-grow flex-col gap-4 p-4">
+			<Toolbar
+				searchError={searchError}
+				searchQuery={query}
+				sortOption={sortOption}
+				sortOptionError={sortOptionError}
+			/>
+			<Suspense fallback={<LoadingPage />}>
 				{projects.length !== 0 && (
 					<div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
 						{projects.map((project) => (
@@ -58,8 +50,8 @@ const Dashboard: NextPage<{
 				{projects.length === 0 && (
 					<ErrorPage errorText="No projects found" />
 				)}
-			</div>
-		</Suspense>
+			</Suspense>
+		</div>
 	)
 }
 

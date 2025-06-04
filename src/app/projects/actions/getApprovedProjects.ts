@@ -1,3 +1,5 @@
+"use cache"
+
 import { SortOption } from "../page"
 import prisma from "@lib/prisma"
 import * as dbUtils from "@utils/db"
@@ -12,38 +14,40 @@ export const getApprovedProjects = async (
 	query?: string,
 	limit = 50,
 ): Promise<ApprovedProject[]> =>
-	await prisma.project.findMany({
-		// Only projects that have been approved should be shown on the dashboard.
-		where: {
-			approved: true,
-			name:
-				query !== undefined
-					? { contains: query, mode: "insensitive" }
-					: undefined,
-		},
-
-		orderBy: {
-			createdAt:
-				sort === "date-asc"
-					? "asc"
-					: sort === "date-desc"
-						? "desc"
+	await prisma.project
+		.findMany({
+			// Only projects that have been approved should be shown on the dashboard.
+			where: {
+				approved: true,
+				name:
+					query !== undefined
+						? { contains: query, mode: "insensitive" }
 						: undefined,
+			},
 
-			votes: isVotesSortOption(sort)
-				? {
-						_count:
-							sort === "votes-asc"
-								? "asc"
-								: sort === "votes-desc"
-									? "desc"
-									: undefined,
-					}
-				: undefined,
-		},
+			orderBy: {
+				createdAt:
+					sort === "date-asc"
+						? "asc"
+						: sort === "date-desc"
+							? "desc"
+							: undefined,
 
-		take: limit,
+				votes: isVotesSortOption(sort)
+					? {
+							_count:
+								sort === "votes-asc"
+									? "asc"
+									: sort === "votes-desc"
+										? "desc"
+										: undefined,
+						}
+					: undefined,
+			},
 
-		// Select only the required properties for a published project.
-		select: dbUtils.approvedProjectFilter,
-	})
+			take: limit,
+
+			// Select only the required properties for a published project.
+			select: dbUtils.approvedProjectFilter,
+		})
+		.catch(() => [])

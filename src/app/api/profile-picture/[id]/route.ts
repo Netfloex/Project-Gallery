@@ -1,5 +1,15 @@
 import prisma from "@lib/prisma"
-import { unstable_cache } from "next/cache"
+
+const getProfilePicture = async (
+	id: number,
+): Promise<{ data: Uint8Array } | null> => {
+	"use cache"
+
+	return await prisma.profilePicture.findUnique({
+		where: { id: id },
+		select: { data: true },
+	})
+}
 
 export const GET = async (
 	request: Request,
@@ -12,17 +22,7 @@ export const GET = async (
 	if (isNaN(idParsed))
 		return new Response("Invalid profile picture id", { status: 400 })
 
-	const getProfilePictureCached = unstable_cache(
-		async (id: number): Promise<{ data: Uint8Array } | null> =>
-			await prisma.profilePicture.findUnique({
-				where: { id: id },
-				select: { data: true },
-			}),
-		[idParsed.toString()],
-		{ tags: ["profile-picture"] },
-	)
-
-	const profilePicture = await getProfilePictureCached(idParsed)
+	const profilePicture = await getProfilePicture(idParsed)
 
 	if (profilePicture === null)
 		return new Response("Could not find profile picture", { status: 404 })

@@ -3,7 +3,6 @@
 import { getApprovedProject } from "./actions/getApprovedProject"
 import { ProjectDetails } from "./ProjectDetails"
 import { NextPage } from "next"
-import { unstable_cache } from "next/cache"
 
 import ErrorPage from "@components/ErrorPage"
 
@@ -15,19 +14,21 @@ const ProjectPage: NextPage<{
 	const idParsed = parseInt(id)
 
 	if (!isNaN(idParsed)) {
-		const getProjectCached = unstable_cache(
-			async (id) => await getApprovedProject(id),
-			[idParsed.toString()],
-			{ tags: ["approved-project"], revalidate: 5 },
-		)
+		const result = await getApprovedProject(idParsed)
 
-		const project = await getProjectCached(idParsed)
-
-		if (project !== null)
+		if (result.success && result.project !== null)
 			return (
 				<div className="container mx-auto">
-					<ProjectDetails project={project} />
+					<ProjectDetails project={result.project} />
 				</div>
+			)
+
+		if (!result.success)
+			return (
+				<ErrorPage
+					description={result.error.message}
+					errorText={result.error.name}
+				/>
 			)
 	}
 

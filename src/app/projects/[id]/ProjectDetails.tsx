@@ -68,7 +68,7 @@ export const ProjectDetails: FC<{ project: ApprovedProject }> = ({
 								Start
 							</Button>
 						) : (
-							<Button color="secondary" disabled isLoading>
+							<Button color="primary" isDisabled isLoading>
 								Connecting...
 							</Button>
 						)}
@@ -94,14 +94,14 @@ export const ProjectDetails: FC<{ project: ApprovedProject }> = ({
 				</Card>
 				<Form className="flex flex-row" onSubmit={onSubmit}>
 					<Input
-						disabled={socketStatus !== SocketStatus.Connected}
+						isDisabled={socketStatus !== SocketStatus.Connected}
 						onValueChange={setMessageInput}
 						startContent="❯"
 						value={messageInput}
 					/>
 					<Input
 						className="flex-1"
-						disabled={socketStatus !== SocketStatus.Connected}
+						isDisabled={socketStatus !== SocketStatus.Connected}
 						type="submit"
 						value="Send"
 					/>

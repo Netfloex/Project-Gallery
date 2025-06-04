@@ -1,5 +1,4 @@
 import { getApprovedProjects } from "../projects/actions/getApprovedProjects"
-import { unstable_cache } from "next/cache"
 import Link from "next/link"
 
 import { Button, ScrollShadow } from "@heroui/react"
@@ -8,24 +7,18 @@ import ProjectCard from "@components/ProjectCard"
 
 import type { FC } from "react"
 
-export const dynamic = "force-dynamic"
-
 const Home: FC = async () => {
-	const getTopVotedProjectsCached = unstable_cache(
-		async () => await getApprovedProjects("votes-desc", undefined, 5),
-		["approved-projects", "votes-desc"],
-		{ revalidate: 60 },
+	const topVotedProjects = await getApprovedProjects(
+		"votes-desc",
+		undefined,
+		5,
 	)
 
-	const topVotedProjects = await getTopVotedProjectsCached()
-
-	const getNewlyUploadedProjectsCached = unstable_cache(
-		async () => await getApprovedProjects("date-desc", undefined, 5),
-		["approved-projects", "date-desc"],
-		{ revalidate: 60 },
+	const newlyUploadedProjects = await getApprovedProjects(
+		"date-desc",
+		undefined,
+		5,
 	)
-
-	const newlyUploadedProjects = await getNewlyUploadedProjectsCached()
 
 	const lists = [
 		{
@@ -41,19 +34,19 @@ const Home: FC = async () => {
 	]
 
 	return (
-		<div className="container mx-auto flex flex-col gap-8">
+		<div className="container mx-auto flex flex-grow flex-col gap-8">
 			<h1 className="text-center text-6xl">Project Gallery</h1>
 
-			<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+			<div className="grid flex-grow grid-cols-1 gap-8 md:grid-cols-2">
 				{lists.map((project) => (
 					<div
-						className="flex grow-1 flex-col gap-4"
+						className="flex flex-grow flex-col gap-4"
 						key={project.name}
 					>
 						<p className="text-center text-3xl">{project.name}</p>
 						{project.items.length !== 0 && (
 							<>
-								<ScrollShadow className="h-[600px]">
+								<ScrollShadow className="max-h-[1000px]">
 									<div className="flex flex-col gap-4">
 										{project.items.map((project) => (
 											<ProjectCard

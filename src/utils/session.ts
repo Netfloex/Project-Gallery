@@ -2,7 +2,6 @@ import { sessionPassword } from "./config"
 import prisma from "@lib/prisma"
 import * as dbUtils from "@utils/db"
 import { getIronSession, IronSession } from "iron-session"
-import { unstable_cache } from "next/cache"
 import { cookies } from "next/headers"
 
 import { PublicUser } from "@typings/user"
@@ -25,20 +24,20 @@ export const get = async (): Promise<SessionData | null> => {
 	// If the session does not define when it is created, it does not exist.
 	if (session.created === undefined) return null
 
-	const getUserCached = unstable_cache(
-		async (studentNumber: string) =>
-			await prisma.user.findUnique({
+	const getUser = async (
+		studentNumber: string,
+	): Promise<PublicUser | null> => {
+		"use cache"
+
+		return await prisma.user
+			.findUnique({
 				where: { studentNumber: studentNumber },
 				select: dbUtils.publicUserFilter,
-			}),
-		[session.studentNumber],
-		{
-			tags: ["user"],
-			revalidate: 30,
-		},
-	)
+			})
+			.catch(() => null)
+	}
 
-	const user = await getUserCached(session.studentNumber)
+	const user = await getUser(session.studentNumber)
 
 	if (user === null) return null
 
