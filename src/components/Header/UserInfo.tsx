@@ -1,44 +1,20 @@
 import { LoginMenu } from "./LoginMenu"
+import { UserInfoDropdown } from "./UserInfoDropdown"
 import * as session from "@utils/session"
 import { FC } from "react"
 
-import {
-	Dropdown,
-	DropdownItem,
-	DropdownMenu,
-	DropdownTrigger,
-	NavbarItem,
-} from "@heroui/react"
-
-import { ProfilePicture } from "@components/ProfilePicture"
+import { NavbarItem } from "@heroui/react"
 
 export const UserInfo: FC = async () => {
 	const sessionData = await session.get()
 
-	if (sessionData !== null)
+	if (sessionData !== null) {
 		return (
 			<NavbarItem>
-				<Dropdown>
-					<DropdownTrigger>
-						<a>
-							<ProfilePicture user={sessionData.user} />
-						</a>
-					</DropdownTrigger>
-					<DropdownMenu aria-label="Static Actions">
-						<DropdownItem key="new">New file</DropdownItem>
-						<DropdownItem key="copy">Copy link</DropdownItem>
-						<DropdownItem key="edit">Edit file</DropdownItem>
-						<DropdownItem
-							className="text-danger"
-							color="danger"
-							key="delete"
-						>
-							Delete file
-						</DropdownItem>
-					</DropdownMenu>
-				</Dropdown>
+				<UserInfoDropdown user={sessionData.user} />
 			</NavbarItem>
 		)
+	}
 
 	return <LoginMenu />
 }

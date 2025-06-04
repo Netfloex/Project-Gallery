@@ -27,9 +27,7 @@ const ProjectCard: FCC<{ project: PublicProject }> = ({ project }) => (
 		<Divider />
 
 		<CardBody className="gap-2">
-			<Chip color={project.approved ? "success" : "danger"}>
-				{project.approved ? "Approved" : "Not approved"}
-			</Chip>
+			{!project.approved && <Chip color="danger">Not approved</Chip>}
 			<p className="line-clamp-3">{project.description}</p>
 		</CardBody>
 

@@ -13,6 +13,7 @@ export const main = async (): Promise<void> => {
 			studentNumber: defaultStudentNumber,
 			name: "Test User 123",
 			password: await hashPassword("testtest"),
+			role: "CURATOR",
 		},
 	})
 
