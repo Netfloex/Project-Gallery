@@ -1,5 +1,7 @@
+import image from "../../../logo.png"
 import { LoginMenu } from "./LoginMenu"
 import { UserInfo } from "./UserInfo"
+import Image from "next/image"
 import Link from "next/link"
 import { Suspense } from "react"
 
@@ -9,7 +11,8 @@ import type { FC } from "react"
 
 export const Header: FC = () => (
 	<Navbar>
-		<NavbarBrand>
+		<NavbarBrand className="gap-2">
+			<Image alt="PG" src={image} width={30} />
 			<Link href="/">
 				<p className="font-bold text-inherit">Project Gallery</p>
 			</Link>
