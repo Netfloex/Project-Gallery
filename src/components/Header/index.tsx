@@ -1,5 +1,5 @@
-import image from "../../../logo.png"
 import { LoginMenu } from "./LoginMenu"
+import logo from "./logo.png"
 import { UserInfo } from "./UserInfo"
 import Image from "next/image"
 import Link from "next/link"
@@ -12,7 +12,7 @@ import type { FC } from "react"
 export const Header: FC = () => (
 	<Navbar>
 		<NavbarBrand className="gap-2">
-			<Image alt="PG" src={image} width={30} />
+			<Image alt="PG" src={logo} width={30} />
 			<Link href="/">
 				<p className="font-bold text-inherit">Project Gallery</p>
 			</Link>
