@@ -1,9 +1,12 @@
 import { randomInt } from "crypto"
 
+import { cookieName, sessionPassword } from "../src/utils/config"
 import { PythonShell } from "./lib/PythonShell"
 import { startServer } from "./lib/startServer"
+import { parseCookies } from "./utils/parseCookies"
 import { writeTmpFile } from "./utils/writeFile"
 import { PrismaClient } from "@prisma/client"
+import { unsealData } from "iron-session"
 import { z } from "zod"
 
 const ProjectIdSchema = z.coerce.number().int().positive()
@@ -22,6 +25,24 @@ io.on("connection", async (socket) => {
 
 	if (!projectIdParsed.success) {
 		console.error("Invalid project ID:", projectIdQuery)
+		socket.disconnect(true)
+
+		return
+	}
+
+	const cookie =
+		parseCookies(socket.handshake.headers.cookie)[cookieName] || ""
+
+	const session = await unsealData(cookie, {
+		password: sessionPassword(),
+	})
+
+	if (
+		!session ||
+		typeof session !== "object" ||
+		!("studentNumber" in session)
+	) {
+		console.error("Invalid session or user not found")
 		socket.disconnect(true)
 
 		return
@@ -52,7 +73,7 @@ io.on("connection", async (socket) => {
 		return
 	}
 
-	console.log("Project found:", project)
+	console.log("Running project:", project.name)
 
 	socket.emit("data", {
 		id: id(),

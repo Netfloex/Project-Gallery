@@ -5,6 +5,8 @@ export const registrableCuratorsFile =
 
 export const runnerSocketUrl = process.env.NEXT_PUBLIC_SOCKET_URL
 
+export const cookieName = "IRON_SESSION"
+
 export const maxProfilePictureSize =
 	parseInt(process.env.MAX_PROFILE_PICTURE_SIZE ?? "") || 1 * 1024 * 1024
 

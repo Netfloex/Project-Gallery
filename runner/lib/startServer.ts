@@ -23,6 +23,10 @@ export const startServer = (port = 4000): ServerType => {
 		},
 	})
 
+	server.on("request", (req, res) => {
+		res.end("Socket.IO server is running")
+	})
+
 	server.listen(port, () => {
 		console.log("Server is listening on port 4000")
 	})

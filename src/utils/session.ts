@@ -1,4 +1,4 @@
-import { sessionPassword } from "./config"
+import { cookieName, sessionPassword } from "./config"
 import prisma from "@lib/prisma"
 import * as dbUtils from "@utils/db"
 import { getIronSession, IronSession } from "iron-session"
@@ -9,8 +9,6 @@ import { PublicUser } from "@typings/user"
 type StoredSessionData = { studentNumber: string; created: Date }
 
 type SessionData = StoredSessionData & { user: PublicUser }
-
-const cookieName = "IRON_SESSION"
 
 const getSessionData = async (): Promise<IronSession<StoredSessionData>> =>
 	await getIronSession<SessionData>(await cookies(), {
