@@ -20,11 +20,18 @@ export const getApprovedProjects = async (
 		uploaderStudentNumber?: string
 	}[] = [{ approved: true }]
 
+	// If there is a logged in user, show the projects that are theirs but unapproved as well.
 	if (studentNumber)
 		whereClauses.push({
 			approved: false,
 			uploaderStudentNumber: studentNumber,
 		})
+
+	// If there is a logged in user that is a curator, show every project, approved or not.
+	// if (user.role === "CURATOR")
+	// 	whereClauses.push({
+	// 		approved: false,
+	// 	})
 
 	return await prisma.project
 		.findMany({

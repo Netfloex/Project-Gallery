@@ -2,6 +2,7 @@
 
 import prisma from "@lib/prisma"
 import * as session from "@utils/session"
+import { revalidatePath } from "next/cache"
 import { z } from "zod"
 
 const acceptedProjectFileTypes = ["text/x-python"]
@@ -92,6 +93,8 @@ export const requestProjectUpload = async (
 			uploaderStudentNumber: sessionData.studentNumber,
 		},
 	})
+
+	revalidatePath("/user")
 
 	return { success: true, error: false }
 }

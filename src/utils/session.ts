@@ -24,7 +24,13 @@ const getUser = async (studentNumber: string): Promise<PublicUser | null> => {
 			where: { studentNumber: studentNumber },
 			select: dbUtils.publicUserFilter,
 		})
-		.catch(() => null)
+		.catch((error: Error) => {
+			console.log(
+				"Error getting user from db for session: " + error.message,
+			)
+
+			return null
+		})
 }
 
 export const get = async (): Promise<SessionData | null> => {

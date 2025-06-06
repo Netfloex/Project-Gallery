@@ -1,6 +1,7 @@
 "use server"
 
 import { getApprovedProject } from "./actions/getApprovedProject"
+import { hasVotedForProject } from "./actions/hasVotedForProject"
 import { ProjectDetails } from "./ProjectDetails"
 import * as session from "@utils/session"
 import { NextPage } from "next"
@@ -22,12 +23,21 @@ const ProjectPage: NextPage<{
 			sessionData?.studentNumber,
 		)
 
-		if (result.success && result.project !== null)
+		if (result.success && result.project !== null) {
+			const hasVotedResult = await hasVotedForProject(result.project.id)
+
 			return (
 				<div className="container mx-auto">
-					<ProjectDetails project={result.project} />
+					<ProjectDetails
+						hasVoted={
+							hasVotedResult.success && hasVotedResult.voted
+						}
+						project={result.project}
+						user={sessionData?.user}
+					/>
 				</div>
 			)
+		}
 
 		if (!result.success)
 			return (

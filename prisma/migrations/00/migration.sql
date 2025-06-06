@@ -3,13 +3,14 @@ CREATE TYPE "Role" AS ENUM ('USER', 'CURATOR');
 
 -- CreateTable
 CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
     "studentNumber" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "password" TEXT NOT NULL,
     "name" TEXT,
     "role" "Role" NOT NULL DEFAULT 'USER',
 
-    CONSTRAINT "User_pkey" PRIMARY KEY ("studentNumber")
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -63,6 +64,9 @@ CREATE TABLE "File" (
 
     CONSTRAINT "File_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_studentNumber_key" ON "User"("studentNumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "ProfilePicture_ownerStudentNumber_key" ON "ProfilePicture"("ownerStudentNumber");

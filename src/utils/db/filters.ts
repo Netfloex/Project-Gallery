@@ -2,6 +2,7 @@
  * A filter to use with a `select` to only select properties that fall inline with the `PublicUser` type
  */
 export const publicUserFilter = {
+	id: true,
 	name: true,
 	createdAt: true,
 	profilePicture: { select: { id: true } },

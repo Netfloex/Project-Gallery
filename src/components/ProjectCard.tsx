@@ -37,7 +37,7 @@ const ProjectCard: FCC<{ project: PublicProject }> = ({ project }) => (
 			<div className="flex grow-1 flex-row items-center gap-4 text-sm">
 				<p>{format(project.createdAt)}</p>
 
-				<p>{project._count.votes} votes</p>
+				<p>{project._count.votes} vote(s)</p>
 			</div>
 			<Button
 				as={Link}

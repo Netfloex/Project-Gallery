@@ -1,6 +1,8 @@
 "use client"
 
+import { CuratorOptions } from "./CuratorOptions"
 import { SocketStatus, useRunProject } from "./hooks/useRunProject"
+import { UserOptions } from "./UserOptions"
 import { FC, FormEvent, useEffect, useRef, useState } from "react"
 
 import {
@@ -17,8 +19,13 @@ import {
 import { ProfilePicture } from "@components/ProfilePicture"
 
 import { PublicProject } from "@typings/project"
+import { PublicUser } from "@typings/user"
 
-export const ProjectDetails: FC<{ project: PublicProject }> = ({ project }) => {
+export const ProjectDetails: FC<{
+	project: PublicProject
+	user?: PublicUser
+	hasVoted: boolean
+}> = ({ project, user, hasVoted }) => {
 	const [messageInput, setMessageInput] = useState<string>("")
 
 	const {
@@ -51,6 +58,7 @@ export const ProjectDetails: FC<{ project: PublicProject }> = ({ project }) => {
 				<h1 className="flex-grow text-5xl">{project.name}</h1>
 				<ProfilePicture user={project.uploader} />
 			</div>
+
 			<Divider />
 
 			<p>{project.description}</p>
@@ -105,6 +113,24 @@ export const ProjectDetails: FC<{ project: PublicProject }> = ({ project }) => {
 					/>
 				</Form>
 			</div>
+
+			{user !== undefined && (
+				<>
+					<Divider />
+					<UserOptions
+						hasVoted={hasVoted}
+						loggedInUserId={user.id}
+						project={project}
+					/>
+				</>
+			)}
+
+			{user?.role === "CURATOR" && (
+				<>
+					<Divider />
+					<CuratorOptions project={project} />
+				</>
+			)}
 		</div>
 	)
 }

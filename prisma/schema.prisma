@@ -16,7 +16,8 @@ datasource db {
 
 /// A user, who has a student number, name, password and role. Can upload projects and vote on them.
 model User {
-  studentNumber  String          @id
+  id             Int             @id @default(autoincrement())
+  studentNumber  String          @unique
   createdAt      DateTime        @default(now())
   password       String
   name           String?
