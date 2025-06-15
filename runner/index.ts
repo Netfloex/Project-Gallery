@@ -37,11 +37,7 @@ io.on("connection", async (socket) => {
 		password: sessionPassword(),
 	})
 
-	if (
-		!session ||
-		typeof session !== "object" ||
-		!("studentNumber" in session)
-	) {
+	if (!session || typeof session !== "object" || !("userId" in session)) {
 		console.error("Invalid session or user not found")
 		socket.disconnect(true)
 
