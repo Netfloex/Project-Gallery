@@ -1,5 +1,5 @@
-import { getApprovedProjects } from "./actions/getApprovedProjects"
 import { Toolbar } from "./Toolbar"
+import { getProjects } from "@actions/getProjects"
 import * as session from "@utils/session"
 import { NextPage } from "next"
 import { Suspense } from "react"
@@ -32,11 +32,11 @@ const Dashboard: NextPage<{
 
 	const sessionData = await session.get()
 
-	const projects = await getApprovedProjects(
-		sortOption,
+	const projects = await getProjects({
+		sort: sortOption,
 		query,
-		sessionData?.userId,
-	)
+		user: sessionData?.user,
+	})
 
 	return (
 		<div className="container mx-auto flex flex-grow flex-col gap-4 p-4">

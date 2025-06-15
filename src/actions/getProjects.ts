@@ -1,37 +1,45 @@
 "use cache"
 
-import { SortOption } from "../page"
+import { SortOption } from "../app/projects/page"
 import prisma from "@lib/prisma"
 import * as dbUtils from "@utils/db"
 
 import { PublicProject } from "@typings/project"
+import { PublicUser } from "@typings/user"
 
 const isVotesSortOption = (sort: SortOption): boolean =>
 	sort === "votes-asc" || sort === "votes-desc"
 
-export const getApprovedProjects = async (
-	sort: SortOption,
-	query?: string,
-	userId?: number,
+interface ProjectsFilter {
+	sort?: SortOption
+	query?: string
+	user?: PublicUser
+	limit?: number
+}
+
+export const getProjects = async ({
+	sort = "date-desc",
+	query,
+	user,
 	limit = 50,
-): Promise<PublicProject[]> => {
+}: ProjectsFilter): Promise<PublicProject[]> => {
 	const whereClauses: {
 		approved: boolean
 		uploaderId?: number
 	}[] = [{ approved: true }]
 
 	// If there is a logged in user, show the projects that are theirs but unapproved as well.
-	if (userId)
+	if (user !== undefined)
 		whereClauses.push({
 			approved: false,
-			uploaderId: userId,
+			uploaderId: user?.id,
 		})
 
 	// If there is a logged in user that is a curator, show every project, approved or not.
-	// if (user.role === "CURATOR")
-	// 	whereClauses.push({
-	// 		approved: false,
-	// 	})
+	if (user?.role === "CURATOR")
+		whereClauses.push({
+			approved: false,
+		})
 
 	return await prisma.project
 		.findMany({

@@ -1,4 +1,4 @@
-import { getApprovedProjects } from "../projects/actions/getApprovedProjects"
+import { getProjects } from "@actions/getProjects"
 import Link from "next/link"
 
 import { Button, ScrollShadow } from "@heroui/react"
@@ -8,19 +8,12 @@ import ProjectCard from "@components/ProjectCard"
 import type { FC } from "react"
 
 const Home: FC = async () => {
-	const topVotedProjects = await getApprovedProjects(
-		"votes-desc",
-		undefined,
-		undefined,
-		5,
-	)
+	const topVotedProjects = await getProjects({
+		sort: "votes-desc",
+		limit: 5,
+	})
 
-	const newlyUploadedProjects = await getApprovedProjects(
-		"date-desc",
-		undefined,
-		undefined,
-		5,
-	)
+	const newlyUploadedProjects = await getProjects({ limit: 5 })
 
 	const lists = [
 		{

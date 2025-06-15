@@ -4,7 +4,8 @@
 			"@components/*": ["./src/components/*"],
 			"@typings/*": ["./src/typings/*"],
 			"@lib/*": ["./src/lib/*"],
-			"@utils/*": ["./src/utils/*"]
+			"@utils/*": ["./src/utils/*"],
+			"@actions/*": ["./src/actions/*"]
 		},
 		"target": "ES2017",
 		"lib": ["dom", "dom.iterable", "esnext"],
