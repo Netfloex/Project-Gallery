@@ -3,7 +3,7 @@ import { UserInfoDropdown } from "./UserInfoDropdown"
 import * as session from "@utils/session"
 import { FC } from "react"
 
-import { NavbarItem } from "@heroui/react"
+import { NavbarItem } from "@heroui/navbar"
 
 export const UserInfo: FC = async () => {
 	const sessionData = await session.get()

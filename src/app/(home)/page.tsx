@@ -1,7 +1,8 @@
 import { getProjects } from "@actions/getProjects"
 import Link from "next/link"
 
-import { Button, ScrollShadow } from "@heroui/react"
+import { Button } from "@heroui/button"
+import { ScrollShadow } from "@heroui/scroll-shadow"
 
 import ProjectCard from "@components/ProjectCard"
 

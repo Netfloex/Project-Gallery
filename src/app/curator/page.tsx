@@ -5,7 +5,7 @@ import * as session from "@utils/session"
 import { NextPage } from "next"
 import { redirect } from "next/navigation"
 
-import { ScrollShadow } from "@heroui/react"
+import { ScrollShadow } from "@heroui/scroll-shadow"
 
 import { ProjectList } from "@components/ProjectList"
 
