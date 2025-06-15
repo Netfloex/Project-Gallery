@@ -1,6 +1,8 @@
 "use server"
 
 import prisma from "@lib/prisma"
+import { userIsAllowedToUseProject } from "@utils/checks"
+import { isApprovedProject } from "@utils/db/helpers"
 import * as session from "@utils/session"
 import { revalidatePath } from "next/cache"
 
@@ -28,15 +30,12 @@ export const voteForProject = async (
 			error: new Error("You are not logged in"),
 		}
 
-	const isApprovedProject = await prisma.project
-		.findUnique({ where: { id: projectId, approved: true } })
-		.then((project) => project !== null)
-		.catch((error: Error) => error)
+	const isApproved = await isApprovedProject(projectId)
 
-	if (!isApprovedProject)
+	if (!userIsAllowedToUseProject(sessionData.user, isApproved))
 		return {
 			success: false,
-			error: new Error("This project is not approved"),
+			error: new Error("You are not allowed to use this project"),
 		}
 
 	const votePromise = remove

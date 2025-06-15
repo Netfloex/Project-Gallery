@@ -3,6 +3,7 @@
 import { CuratorOptions } from "./CuratorOptions"
 import { SocketStatus, useRunProject } from "./hooks/useRunProject"
 import { UserOptions } from "./UserOptions"
+import { userIsAllowedToUseProject } from "@utils/checks"
 import { FC, FormEvent, useEffect, useRef, useState } from "react"
 
 import {
@@ -52,6 +53,11 @@ export const ProjectDetails: FC<{
 		sendMessage(messageInput)
 	}
 
+	// If there is no logged in use then they are not allowed to run at all.
+	const isAllowedToStart = user
+		? userIsAllowedToUseProject(user, project.approved)
+		: false
+
 	return (
 		<div className="flex flex-col gap-4 px-4">
 			<div className="flex flex-row gap-2">
@@ -66,11 +72,19 @@ export const ProjectDetails: FC<{
 				<Card>
 					<CardHeader>
 						{socketStatus === SocketStatus.Connected ? (
-							<Button color="danger" onPress={disconnectSocket}>
+							<Button
+								color="danger"
+								isDisabled={!isAllowedToStart}
+								onPress={disconnectSocket}
+							>
 								Stop
 							</Button>
 						) : socketStatus === SocketStatus.Disconnected ? (
-							<Button color="success" onPress={connectSocket}>
+							<Button
+								color="success"
+								isDisabled={!isAllowedToStart}
+								onPress={connectSocket}
+							>
 								Start
 							</Button>
 						) : (

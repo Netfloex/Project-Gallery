@@ -4,6 +4,7 @@ import prisma from "@lib/prisma"
 import * as dbUtils from "@utils/db"
 
 import { PublicProject } from "@typings/project"
+import { PublicUser } from "@typings/user"
 
 interface OkResult {
 	success: true
@@ -15,29 +16,29 @@ interface ErrResult {
 	error: Error
 }
 
-type ApprovedProjectResult = OkResult | ErrResult
+type ProjectResult = OkResult | ErrResult
 
-export const getApprovedProject = async (
+export const getProject = async (
 	id: number,
-	userId?: number,
-): Promise<ApprovedProjectResult> => {
+	user?: PublicUser,
+): Promise<ProjectResult> => {
 	const whereClauses: {
 		approved: boolean
 		uploaderId?: number
 	}[] = [{ approved: true }]
 
 	// If there is a logged in user, show the projects that are theirs but unapproved as well.
-	if (userId)
+	if (user)
 		whereClauses.push({
 			approved: false,
-			uploaderId: userId,
+			uploaderId: user.id,
 		})
 
 	// If there is a logged in user that is a curator, show every project, approved or not.
-	// if (user.role === "CURATOR")
-	// 	whereClauses.push({
-	// 		approved: false,
-	// 	})
+	if (user?.role === "CURATOR")
+		whereClauses.push({
+			approved: false,
+		})
 
 	return await prisma.project
 		.findUnique({

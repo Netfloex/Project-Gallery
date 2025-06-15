@@ -2,6 +2,11 @@
 
 import { voteForProject } from "./actions/voteForProject"
 import { useMutation } from "@tanstack/react-query"
+import {
+	userIsAllowedToModifyProject,
+	userIsAllowedToUseProject,
+	userIsOwnerOfProject,
+} from "@utils/checks"
 import Link from "next/link"
 import { FC, useState } from "react"
 
@@ -39,9 +44,15 @@ export const UserOptions: FC<{
 
 	const error = voteError
 
-	const isAllowedToModify =
-		loggedInUser.id === project.uploader.id ||
-		loggedInUser.role === "CURATOR"
+	const isAllowedToUse = userIsAllowedToUseProject(
+		loggedInUser,
+		project.approved,
+	)
+
+	const isAllowedToModify = userIsAllowedToModifyProject(
+		loggedInUser,
+		project,
+	)
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -49,6 +60,7 @@ export const UserOptions: FC<{
 			<div className="flex flex-row gap-4">
 				<Button
 					color={hasVoted ? "danger" : "primary"}
+					isDisabled={!isAllowedToUse}
 					isLoading={sendingVotePending}
 					onPress={() =>
 						vote({
@@ -61,13 +73,16 @@ export const UserOptions: FC<{
 					{hasVoted ? "Remove vote for project" : "Vote for project"}
 				</Button>
 
-				{isAllowedToModify && (
+				{userIsOwnerOfProject(loggedInUser, project) && (
 					<>
-						<Button color="danger">Remove project</Button>
+						<Button color="danger" isDisabled={!isAllowedToModify}>
+							Remove project
+						</Button>
 						<Button
 							as={Link}
 							color="secondary"
 							href={`/projects/${project.id}/edit`}
+							isDisabled={!isAllowedToModify}
 						>
 							Edit project
 						</Button>

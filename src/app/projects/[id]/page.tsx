@@ -1,6 +1,6 @@
 "use server"
 
-import { getApprovedProject } from "./actions/getApprovedProject"
+import { getProject } from "./actions/getProject"
 import { hasVotedForProject } from "./actions/hasVotedForProject"
 import { ProjectDetails } from "./ProjectDetails"
 import * as session from "@utils/session"
@@ -18,7 +18,7 @@ const ProjectPage: NextPage<{
 	if (!isNaN(idParsed)) {
 		const sessionData = await session.get()
 
-		const result = await getApprovedProject(idParsed, sessionData?.userId)
+		const result = await getProject(idParsed, sessionData?.user)
 
 		if (result.success && result.project !== null) {
 			const hasVotedResult = sessionData

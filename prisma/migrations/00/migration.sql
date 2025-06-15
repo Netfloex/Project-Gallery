@@ -42,6 +42,18 @@ CREATE TABLE "Vote" (
 );
 
 -- CreateTable
+CREATE TABLE "ProjectEditRequest" (
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "projectId" INTEGER NOT NULL,
+    "requesterId" INTEGER NOT NULL,
+    "name" TEXT,
+    "description" TEXT,
+    "files" TEXT[],
+
+    CONSTRAINT "ProjectEditRequest_pkey" PRIMARY KEY ("requesterId","projectId")
+);
+
+-- CreateTable
 CREATE TABLE "Project" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -74,6 +86,9 @@ CREATE UNIQUE INDEX "User_profilePictureId_key" ON "User"("profilePictureId");
 -- CreateIndex
 CREATE UNIQUE INDEX "ProfileUpdateRequest_profilePictureId_key" ON "ProfileUpdateRequest"("profilePictureId");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "ProjectEditRequest_projectId_key" ON "ProjectEditRequest"("projectId");
+
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_profilePictureId_fkey" FOREIGN KEY ("profilePictureId") REFERENCES "ProfilePicture"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -88,6 +103,12 @@ ALTER TABLE "Vote" ADD CONSTRAINT "Vote_projectId_fkey" FOREIGN KEY ("projectId"
 
 -- AddForeignKey
 ALTER TABLE "Vote" ADD CONSTRAINT "Vote_voterId_fkey" FOREIGN KEY ("voterId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectEditRequest" ADD CONSTRAINT "ProjectEditRequest_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProjectEditRequest" ADD CONSTRAINT "ProjectEditRequest_requesterId_fkey" FOREIGN KEY ("requesterId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Project" ADD CONSTRAINT "Project_uploaderId_fkey" FOREIGN KEY ("uploaderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
