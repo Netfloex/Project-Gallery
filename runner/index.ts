@@ -37,8 +37,24 @@ io.on("connection", async (socket) => {
 		password: sessionPassword(),
 	})
 
-	if (!session || typeof session !== "object" || !("userId" in session)) {
+	if (
+		!session ||
+		typeof session !== "object" ||
+		!("userId" in session) ||
+		typeof session.userId !== "number"
+	) {
 		console.error("Invalid session or user not found")
+		socket.disconnect(true)
+
+		return
+	}
+
+	const sessionUser = await prisma.user.findUnique({
+		where: { id: session.userId },
+		select: { role: true },
+	})
+
+	if (sessionUser === null) {
 		socket.disconnect(true)
 
 		return
@@ -49,7 +65,7 @@ io.on("connection", async (socket) => {
 	console.log("Project ID:", projectId)
 
 	const project = await prisma.project.findUnique({
-		where: { id: projectId, approved: true },
+		where: { id: projectId, approved: sessionUser.role !== "CURATOR" },
 		select: {
 			id: true,
 			name: true,
