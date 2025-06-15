@@ -65,7 +65,10 @@ io.on("connection", async (socket) => {
 	console.log("Project ID:", projectId)
 
 	const project = await prisma.project.findUnique({
-		where: { id: projectId, approved: sessionUser.role !== "CURATOR" },
+		where: {
+			id: projectId,
+			approved: sessionUser.role === "CURATOR" ? undefined : true,
+		},
 		select: {
 			id: true,
 			name: true,
