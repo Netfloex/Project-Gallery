@@ -1,5 +1,6 @@
 "use client"
 
+import { getProfilePictureSrc } from "@utils/getProfilePictureSrc"
 import { FC } from "react"
 
 import { User } from "@heroui/react"
@@ -15,10 +16,7 @@ const capitalize = (sentence: string): string =>
 export const ProfilePicture: FC<{ user: PublicUser }> = ({ user }) => (
 	<User
 		avatarProps={{
-			src:
-				user.profilePicture !== null
-					? `/api/profile-picture/${user.profilePicture.id}`
-					: undefined,
+			src: getProfilePictureSrc(user.profilePictureId),
 			name: user.name || undefined,
 		}}
 		description={capitalize(user.role)}

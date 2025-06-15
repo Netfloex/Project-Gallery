@@ -15,6 +15,7 @@ interface ProjectsFilter {
 	query?: string
 	user?: PublicUser
 	limit?: number
+	includeApproved?: boolean
 }
 
 export const getProjects = async ({
@@ -22,11 +23,18 @@ export const getProjects = async ({
 	query,
 	user,
 	limit = 50,
+	includeApproved = true,
 }: ProjectsFilter): Promise<PublicProject[]> => {
 	const whereClauses: {
 		approved: boolean
 		uploaderId?: number
-	}[] = [{ approved: true }]
+	}[] = []
+
+	if (includeApproved) {
+		whereClauses.push({
+			approved: true,
+		})
+	}
 
 	// If there is a logged in user, show the projects that are theirs but unapproved as well.
 	if (user !== undefined)

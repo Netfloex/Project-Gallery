@@ -1,6 +1,7 @@
 "use client"
 
 import { requestProfileUpdate } from "./actions/requestProfileUpdate"
+import { getProfilePictureSrc } from "@utils/getProfilePictureSrc"
 import { FC, useActionState } from "react"
 
 import {
@@ -47,11 +48,7 @@ export const ProfileUpdateRequestForm: FC<{ user: PublicUser }> = ({
 							isDisabled={state.success}
 							name={user.name || undefined}
 							size="lg"
-							src={
-								user.profilePicture !== null
-									? `/api/profile-picture/${user.profilePicture.id}`
-									: undefined
-							}
+							src={getProfilePictureSrc(user.profilePictureId)}
 						/>
 						<Input
 							accept={[".png", ".jpg", ".jpeg"].join(",")}

@@ -37,6 +37,12 @@ export const UserInfoDropdown: FC<{ user: PublicUser }> = ({ user }) => (
 			<DropdownItem href="/user" key="user-page">
 				Account
 			</DropdownItem>
+
+			{user.role !== "CURATOR" ? null : (
+				<DropdownItem href="/curator" key="curator-page">
+					Curator
+				</DropdownItem>
+			)}
 			<DropdownItem key="logout">Logout</DropdownItem>
 		</DropdownMenu>
 	</Dropdown>

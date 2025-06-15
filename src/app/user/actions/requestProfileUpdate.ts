@@ -102,8 +102,17 @@ export const requestProfileUpdate = async (
 	await prisma.profileUpdateRequest.create({
 		data: {
 			newName: name,
-			profilePicture: profilePicture,
-			requesterId: sessionData.userId,
+			profilePicture:
+				profilePicture === null
+					? undefined
+					: {
+							create: {
+								data: profilePicture,
+							},
+						},
+			requester: {
+				connect: { id: sessionData.userId },
+			},
 		},
 	})
 

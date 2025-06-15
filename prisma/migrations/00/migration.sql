@@ -8,6 +8,7 @@ CREATE TABLE "User" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "password" TEXT NOT NULL,
     "name" TEXT,
+    "profilePictureId" INTEGER,
     "role" "Role" NOT NULL DEFAULT 'USER',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -16,7 +17,6 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "ProfilePicture" (
     "id" SERIAL NOT NULL,
-    "ownerId" INTEGER NOT NULL,
     "data" BYTEA NOT NULL,
 
     CONSTRAINT "ProfilePicture_pkey" PRIMARY KEY ("id")
@@ -26,7 +26,7 @@ CREATE TABLE "ProfilePicture" (
 CREATE TABLE "ProfileUpdateRequest" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "newName" TEXT,
-    "profilePicture" BYTEA,
+    "profilePictureId" INTEGER,
     "requesterId" INTEGER NOT NULL,
 
     CONSTRAINT "ProfileUpdateRequest_pkey" PRIMARY KEY ("requesterId")
@@ -69,10 +69,16 @@ CREATE TABLE "File" (
 CREATE UNIQUE INDEX "User_studentNumber_key" ON "User"("studentNumber");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ProfilePicture_ownerId_key" ON "ProfilePicture"("ownerId");
+CREATE UNIQUE INDEX "User_profilePictureId_key" ON "User"("profilePictureId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ProfileUpdateRequest_profilePictureId_key" ON "ProfileUpdateRequest"("profilePictureId");
 
 -- AddForeignKey
-ALTER TABLE "ProfilePicture" ADD CONSTRAINT "ProfilePicture_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "User" ADD CONSTRAINT "User_profilePictureId_fkey" FOREIGN KEY ("profilePictureId") REFERENCES "ProfilePicture"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ProfileUpdateRequest" ADD CONSTRAINT "ProfileUpdateRequest_profilePictureId_fkey" FOREIGN KEY ("profilePictureId") REFERENCES "ProfilePicture"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ProfileUpdateRequest" ADD CONSTRAINT "ProfileUpdateRequest_requesterId_fkey" FOREIGN KEY ("requesterId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
