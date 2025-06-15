@@ -1,8 +1,8 @@
-"use cache"
-
 import prisma from "@lib/prisma"
 import * as dbUtils from "@utils/db"
+import { unstable_cacheTag as cacheTag } from "next/cache"
 
+import { CacheTags } from "@typings/CacheTags"
 import { PublicProject } from "@typings/project"
 
 interface OkResult {
@@ -19,8 +19,11 @@ export type GetUserProjectResult = OkResult | ErrResult
 
 export const getUserProjects = async (
 	userId: number,
-): Promise<GetUserProjectResult> =>
-	await prisma.project
+): Promise<GetUserProjectResult> => {
+	"use cache"
+	cacheTag(CacheTags.projects)
+
+	return await prisma.project
 		.findMany({
 			// Only projects that belong to the user should be shown
 			where: { uploaderId: userId },
@@ -34,3 +37,4 @@ export const getUserProjects = async (
 		})
 		.then((projects) => ({ success: true, projects }) as OkResult)
 		.catch((error: Error) => ({ success: false, error }) as ErrResult)
+}

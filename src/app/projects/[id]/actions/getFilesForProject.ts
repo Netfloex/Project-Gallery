@@ -1,6 +1,7 @@
-"use cache"
-
 import prisma from "@lib/prisma"
+import { unstable_cacheTag as cacheTag } from "next/cache"
+
+import { CacheTags } from "@typings/CacheTags"
 
 export interface OkResult {
 	success: true
@@ -16,8 +17,12 @@ export type FileResult = OkResult | ErrResult
 
 export const getFilesForProject = async (
 	projectId: number,
-): Promise<FileResult> =>
-	await prisma.project
+): Promise<FileResult> => {
+	"use cache"
+
+	cacheTag(CacheTags.projects)
+
+	return await prisma.project
 		.findUnique({
 			where: {
 				id: projectId,
@@ -49,3 +54,4 @@ export const getFilesForProject = async (
 
 			return response
 		})
+}

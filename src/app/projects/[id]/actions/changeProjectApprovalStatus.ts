@@ -2,7 +2,9 @@
 
 import prisma from "@lib/prisma"
 import * as session from "@utils/session"
-import { revalidatePath } from "next/cache"
+import { revalidateTag } from "next/cache"
+
+import { CacheTags } from "@typings/CacheTags"
 
 export interface OkResult {
 	success: true
@@ -37,9 +39,7 @@ export const changeProjectApprovalStatus = async (
 			data: { approved: approved },
 		})
 		.then(({ approved }) => {
-			revalidatePath(`/projects/${projectId}`)
-			revalidatePath(`/projects`)
-			revalidatePath(`/`)
+			revalidateTag(CacheTags.projects)
 
 			return { success: true, approved: approved } as OkResult
 		})

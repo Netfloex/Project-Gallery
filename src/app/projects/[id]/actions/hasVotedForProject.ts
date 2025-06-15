@@ -1,13 +1,17 @@
-"use cache"
-
 import { ErrResult, OkResult, VoteResult } from "./voteForProject"
 import prisma from "@lib/prisma"
+import { unstable_cacheTag as cacheTag } from "next/cache"
+
+import { CacheTags } from "@typings/CacheTags"
 
 export const hasVotedForProject = async (
 	projectId: number,
 	voterId: number,
-): Promise<VoteResult> =>
-	await prisma.vote
+): Promise<VoteResult> => {
+	"use cache"
+	cacheTag(CacheTags.votes)
+
+	return await prisma.vote
 		.findUnique({
 			where: {
 				voterId_projectId: {
@@ -24,3 +28,4 @@ export const hasVotedForProject = async (
 					error: error,
 				}) as ErrResult,
 		)
+}

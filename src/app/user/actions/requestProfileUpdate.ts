@@ -3,7 +3,10 @@
 import prisma from "@lib/prisma"
 import { maxProfilePictureSize } from "@utils/config"
 import * as session from "@utils/session"
+import { revalidateTag } from "next/cache"
 import { z } from "zod"
+
+import { CacheTags } from "@typings/CacheTags"
 
 const acceptedProfilePictureFileTypes = ["image/png", "image/jpg", "image/jpeg"]
 
@@ -115,6 +118,8 @@ export const requestProfileUpdate = async (
 			},
 		},
 	})
+
+	revalidateTag(CacheTags.profileUpdateRequests)
 
 	return { success: true, error: false }
 }

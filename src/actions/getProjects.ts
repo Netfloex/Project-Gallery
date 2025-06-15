@@ -1,8 +1,7 @@
-"use cache"
-
 import { SortOption } from "../app/projects/page"
 import prisma from "@lib/prisma"
 import * as dbUtils from "@utils/db"
+import { unstable_cacheTag as cacheTag } from "next/cache"
 
 import { PublicProject } from "@typings/project"
 import { PublicUser } from "@typings/user"
@@ -25,6 +24,9 @@ export const getProjects = async ({
 	limit = 50,
 	includeApproved = true,
 }: ProjectsFilter): Promise<PublicProject[]> => {
+	"use cache"
+	cacheTag("projects")
+
 	const whereClauses: {
 		approved: boolean
 		uploaderId?: number

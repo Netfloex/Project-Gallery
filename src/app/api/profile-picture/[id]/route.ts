@@ -1,9 +1,13 @@
 import prisma from "@lib/prisma"
+import { unstable_cacheTag as cacheTag } from "next/cache"
+
+import { CacheTags } from "@typings/CacheTags"
 
 const getProfilePicture = async (
 	id: number,
 ): Promise<{ data: Uint8Array } | null> => {
 	"use cache"
+	cacheTag(CacheTags.profilePictures)
 
 	return await prisma.profilePicture.findUnique({
 		where: { id: id },

@@ -4,7 +4,9 @@ import prisma from "@lib/prisma"
 import { userIsAllowedToUseProject } from "@utils/checks"
 import { isApprovedProject } from "@utils/db/helpers"
 import * as session from "@utils/session"
-import { revalidatePath } from "next/cache"
+import { revalidateTag } from "next/cache"
+
+import { CacheTags } from "@typings/CacheTags"
 
 export interface OkResult {
 	success: true
@@ -59,9 +61,8 @@ export const voteForProject = async (
 	return await votePromise
 		.then(() => {
 			// Revalidate the page for the project to show the user that their vote registered
-			revalidatePath(`/projects/${projectId}`)
-			revalidatePath(`/projects`)
-			revalidatePath(`/`)
+			revalidateTag(CacheTags.projects)
+			revalidateTag(CacheTags.votes)
 
 			return { success: true, voted: !remove } as OkResult
 		})

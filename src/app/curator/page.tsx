@@ -21,8 +21,6 @@ const Curator: NextPage = async () => {
 	})
 	const requests = await getRequests()
 
-	// return <pre>{JSON.stringify(requests, null, "\t")}</pre>
-
 	return (
 		<div className="container mx-auto p-4">
 			<div className="flex gap-4">
@@ -37,7 +35,9 @@ const Curator: NextPage = async () => {
 					<h1 className="text-center text-3xl">Requests</h1>
 					<div>
 						{requests.length === 0 ? (
-							<p>No requests</p>
+							<h1 className="text-center">
+								No unapproved requests
+							</h1>
 						) : (
 							<ScrollShadow className="max-h-[1000px]">
 								<div className="flex flex-col gap-4">

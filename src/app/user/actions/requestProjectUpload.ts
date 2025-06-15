@@ -2,8 +2,10 @@
 
 import prisma from "@lib/prisma"
 import * as session from "@utils/session"
-import { revalidatePath } from "next/cache"
+import { revalidateTag } from "next/cache"
 import { z } from "zod"
+
+import { CacheTags } from "@typings/CacheTags"
 
 const acceptedProjectFileTypes = ["text/x-python"]
 
@@ -94,7 +96,7 @@ export const requestProjectUpload = async (
 		},
 	})
 
-	revalidatePath("/user")
+	revalidateTag(CacheTags.projects)
 
 	return { success: true, error: false }
 }

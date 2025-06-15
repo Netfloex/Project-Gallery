@@ -8,7 +8,10 @@ import {
 import { hashPassword } from "@utils/password"
 import { readLines } from "@utils/readLines"
 import * as session from "@utils/session"
+import { revalidateTag } from "next/cache"
 import { z } from "zod"
+
+import { CacheTags } from "@typings/CacheTags"
 
 const RegisterSchema = z.object({
 	studentNumber: z.string().min(2).max(20),
@@ -104,6 +107,8 @@ export const register = async (
 		})
 		.then(async (user) => {
 			await session.login(user.id)
+
+			revalidateTag(CacheTags.users)
 
 			return { success: true, error: false } as RegisteredResponse
 		})

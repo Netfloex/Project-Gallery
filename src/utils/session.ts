@@ -2,8 +2,10 @@ import { cookieName, sessionPassword } from "./config"
 import prisma from "@lib/prisma"
 import * as dbUtils from "@utils/db"
 import { getIronSession, IronSession } from "iron-session"
+import { unstable_cacheTag as cacheTag } from "next/cache"
 import { cookies } from "next/headers"
 
+import { CacheTags } from "@typings/CacheTags"
 import { PublicUser } from "@typings/user"
 
 type StoredSessionData = { userId: number; created: Date }
@@ -18,6 +20,7 @@ const getSessionData = async (): Promise<IronSession<StoredSessionData>> =>
 
 const getUser = async (userId: number): Promise<PublicUser | null> => {
 	"use cache"
+	cacheTag(CacheTags.users)
 
 	return await prisma.user
 		.findUnique({
