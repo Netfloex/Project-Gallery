@@ -88,7 +88,7 @@ export const requestProfileUpdate = async (
 
 	const hasProfileUpdateRequest = await prisma.profileUpdateRequest
 		.findUnique({
-			where: { requesterStudentNumber: sessionData.studentNumber },
+			where: { requesterId: sessionData.userId },
 		})
 		.then((request) => request !== null)
 		.catch(() => false)
@@ -96,14 +96,14 @@ export const requestProfileUpdate = async (
 	// If there is already a profile update request, remove it
 	if (hasProfileUpdateRequest)
 		await prisma.profileUpdateRequest.delete({
-			where: { requesterStudentNumber: sessionData.studentNumber },
+			where: { requesterId: sessionData.userId },
 		})
 
 	await prisma.profileUpdateRequest.create({
 		data: {
 			newName: name,
 			profilePicture: profilePicture,
-			requesterStudentNumber: sessionData.studentNumber,
+			requesterId: sessionData.userId,
 		},
 	})
 

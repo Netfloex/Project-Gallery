@@ -6,7 +6,7 @@ import { cookies } from "next/headers"
 
 import { PublicUser } from "@typings/user"
 
-type StoredSessionData = { studentNumber: string; created: Date }
+type StoredSessionData = { userId: number; created: Date }
 
 type SessionData = StoredSessionData & { user: PublicUser }
 
@@ -16,12 +16,12 @@ const getSessionData = async (): Promise<IronSession<StoredSessionData>> =>
 		cookieName: cookieName,
 	})
 
-const getUser = async (studentNumber: string): Promise<PublicUser | null> => {
+const getUser = async (userId: number): Promise<PublicUser | null> => {
 	"use cache"
 
 	return await prisma.user
 		.findUnique({
-			where: { studentNumber: studentNumber },
+			where: { id: userId },
 			select: dbUtils.publicUserFilter,
 		})
 		.catch((error: Error) => {
@@ -39,7 +39,7 @@ export const get = async (): Promise<SessionData | null> => {
 	// If the session does not define when it is created, it does not exist.
 	if (session.created === undefined) return null
 
-	const user = await getUser(session.studentNumber)
+	const user = await getUser(session.userId)
 
 	if (user === null) return null
 
@@ -52,10 +52,10 @@ export const logout = async (): Promise<void> => {
 	session.destroy()
 }
 
-export const login = async (studentNumber: string): Promise<void> => {
+export const login = async (userId: number): Promise<void> => {
 	const session = await getSessionData()
 
-	session.studentNumber = studentNumber
+	session.userId = userId
 	session.created = new Date()
 
 	await session.save()

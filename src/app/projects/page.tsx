@@ -35,7 +35,7 @@ const Dashboard: NextPage<{
 	const projects = await getApprovedProjects(
 		sortOption,
 		query,
-		sessionData?.studentNumber,
+		sessionData?.userId,
 	)
 
 	return (

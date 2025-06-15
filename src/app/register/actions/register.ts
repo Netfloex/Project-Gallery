@@ -103,7 +103,7 @@ export const register = async (
 			},
 		})
 		.then(async (user) => {
-			await session.login(user.studentNumber)
+			await session.login(user.id)
 
 			return { success: true, error: false } as RegisteredResponse
 		})

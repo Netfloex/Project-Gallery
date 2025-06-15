@@ -2,17 +2,19 @@
 
 import { voteForProject } from "./actions/voteForProject"
 import { useMutation } from "@tanstack/react-query"
+import Link from "next/link"
 import { FC, useState } from "react"
 
 import { Alert, Button } from "@heroui/react"
 
 import { PublicProject } from "@typings/project"
+import { PublicUser } from "@typings/user"
 
 export const UserOptions: FC<{
 	project: PublicProject
-	loggedInUserId: number
+	loggedInUser: PublicUser
 	hasVoted: boolean
-}> = ({ project, loggedInUserId, hasVoted: hasVotedInitially }) => {
+}> = ({ project, loggedInUser, hasVoted: hasVotedInitially }) => {
 	const [hasVoted, setHasVoted] = useState(hasVotedInitially)
 
 	const {
@@ -37,6 +39,10 @@ export const UserOptions: FC<{
 
 	const error = voteError
 
+	const isAllowedToModify =
+		loggedInUser.id === project.uploader.id ||
+		loggedInUser.role === "CURATOR"
+
 	return (
 		<div className="flex flex-col gap-2">
 			<h1 className="text-3xl">User options</h1>
@@ -55,8 +61,17 @@ export const UserOptions: FC<{
 					{hasVoted ? "Remove vote for project" : "Vote for project"}
 				</Button>
 
-				{loggedInUserId === project.uploader.id && (
-					<Button color="danger">Remove project</Button>
+				{isAllowedToModify && (
+					<>
+						<Button color="danger">Remove project</Button>
+						<Button
+							as={Link}
+							color="secondary"
+							href={`/projects/${project.id}/edit`}
+						>
+							Edit project
+						</Button>
+					</>
 				)}
 			</div>
 

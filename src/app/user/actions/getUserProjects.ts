@@ -18,12 +18,12 @@ interface ErrResult {
 export type GetUserProjectResult = OkResult | ErrResult
 
 export const getUserProjects = async (
-	studentNumber: string,
+	userId: number,
 ): Promise<GetUserProjectResult> =>
 	await prisma.project
 		.findMany({
 			// Only projects that belong to the user should be shown
-			where: { uploaderStudentNumber: studentNumber },
+			where: { uploaderId: userId },
 
 			orderBy: { createdAt: "desc" },
 

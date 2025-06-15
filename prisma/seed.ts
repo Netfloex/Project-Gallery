@@ -8,7 +8,7 @@ const prisma = new PrismaClient()
 export const main = async (): Promise<void> => {
 	const defaultStudentNumber = "s12345678"
 
-	await prisma.user.create({
+	const user = await prisma.user.create({
 		data: {
 			studentNumber: defaultStudentNumber,
 			name: "Test User 123",
@@ -23,7 +23,7 @@ export const main = async (): Promise<void> => {
 			description:
 				"A simple calculator that performs basic arithmetic operations (addition, subtraction, multiplication, division).",
 
-			uploaderStudentNumber: defaultStudentNumber,
+			uploaderId: user.id,
 			approved: true,
 
 			files: {
@@ -43,7 +43,7 @@ export const main = async (): Promise<void> => {
 			description:
 				"A simple command-line to-do list application that allows users to add and view tasks.",
 
-			uploaderStudentNumber: defaultStudentNumber,
+			uploaderId: user.id,
 			approved: true,
 
 			files: {
@@ -63,7 +63,7 @@ export const main = async (): Promise<void> => {
 			description:
 				"A simple game where the user has to guess a randomly generated number.",
 
-			uploaderStudentNumber: defaultStudentNumber,
+			uploaderId: user.id,
 			approved: true,
 
 			files: {

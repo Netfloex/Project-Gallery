@@ -90,7 +90,7 @@ export const requestProjectUpload = async (
 			name: name,
 			description: description,
 			files: { create: { contents: projectFile, name: fileName } },
-			uploaderStudentNumber: sessionData.studentNumber,
+			uploaderId: sessionData.userId,
 		},
 	})
 

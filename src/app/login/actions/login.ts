@@ -72,7 +72,7 @@ export const login = async (
 					errorMessage: "Invalid student number or password",
 				} as ErrorResponse
 
-			await session.login(user.studentNumber)
+			await session.login(user.id)
 
 			return { success: true, error: false } as LoggedInResponse
 		})

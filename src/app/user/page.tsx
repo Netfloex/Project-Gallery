@@ -9,9 +9,7 @@ const User: NextPage = async () => {
 
 	if (sessionData === null) redirect("/login")
 
-	const getUserProjectResult = await getUserProjects(
-		sessionData.studentNumber,
-	)
+	const getUserProjectResult = await getUserProjects(sessionData.userId)
 
 	return (
 		<UserDetails

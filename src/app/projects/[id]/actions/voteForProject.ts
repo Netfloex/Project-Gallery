@@ -43,8 +43,8 @@ export const voteForProject = async (
 		? // If remove is true, we delete the vote
 			prisma.vote.delete({
 				where: {
-					userStudentNumber_projectId: {
-						userStudentNumber: sessionData.studentNumber,
+					voterId_projectId: {
+						voterId: sessionData.userId,
 						projectId: projectId,
 					},
 				},
@@ -52,8 +52,8 @@ export const voteForProject = async (
 		: // Otherwise we create one
 			prisma.vote.create({
 				data: {
+					voterId: sessionData.userId,
 					projectId: projectId,
-					userStudentNumber: sessionData.studentNumber,
 				},
 			})
 

@@ -18,13 +18,15 @@ const ProjectPage: NextPage<{
 	if (!isNaN(idParsed)) {
 		const sessionData = await session.get()
 
-		const result = await getApprovedProject(
-			idParsed,
-			sessionData?.studentNumber,
-		)
+		const result = await getApprovedProject(idParsed, sessionData?.userId)
 
 		if (result.success && result.project !== null) {
-			const hasVotedResult = await hasVotedForProject(result.project.id)
+			const hasVotedResult = sessionData
+				? await hasVotedForProject(
+						result.project.id,
+						sessionData?.userId,
+					)
+				: { success: true, voted: false }
 
 			return (
 				<div className="container mx-auto">

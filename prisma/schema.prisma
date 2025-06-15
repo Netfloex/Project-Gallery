@@ -38,8 +38,8 @@ enum Role {
 model ProfilePicture {
   id Int @id @default(autoincrement())
 
-  owner              User   @relation(fields: [ownerStudentNumber], references: [studentNumber])
-  ownerStudentNumber String @unique
+  owner   User @relation(fields: [ownerId], references: [id])
+  ownerId Int  @unique
 
   data Bytes
 }
@@ -50,8 +50,8 @@ model ProfileUpdateRequest {
   newName        String?
   profilePicture Bytes?
 
-  requester              User   @relation(fields: [requesterStudentNumber], references: [studentNumber])
-  requesterStudentNumber String @id
+  requester   User @relation(fields: [requesterId], references: [id])
+  requesterId Int  @id
 }
 
 /// A vote that can be cast on a project by a user
@@ -61,10 +61,10 @@ model Vote {
   project   Project @relation(fields: [projectId], references: [id])
   projectId Int
 
-  user              User   @relation(fields: [userStudentNumber], references: [studentNumber])
-  userStudentNumber String
+  user    User @relation(fields: [voterId], references: [id])
+  voterId Int
 
-  @@id([userStudentNumber, projectId])
+  @@id([voterId, projectId])
 }
 
 /// A project that is created by an uploader (user), has a name & description, can be approved by a curator, can be voted on
@@ -80,8 +80,8 @@ model Project {
 
   files File[]
 
-  uploader              User   @relation(fields: [uploaderStudentNumber], references: [studentNumber])
-  uploaderStudentNumber String
+  uploader   User @relation(fields: [uploaderId], references: [id])
+  uploaderId Int
 }
 
 // A file uploaded that contains user provided code. Has a name and is related to a project.

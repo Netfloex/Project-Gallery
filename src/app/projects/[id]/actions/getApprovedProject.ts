@@ -19,18 +19,18 @@ type ApprovedProjectResult = OkResult | ErrResult
 
 export const getApprovedProject = async (
 	id: number,
-	studentNumber?: string,
+	userId?: number,
 ): Promise<ApprovedProjectResult> => {
 	const whereClauses: {
 		approved: boolean
-		uploaderStudentNumber?: string
+		uploaderId?: number
 	}[] = [{ approved: true }]
 
 	// If there is a logged in user, show the projects that are theirs but unapproved as well.
-	if (studentNumber)
+	if (userId)
 		whereClauses.push({
 			approved: false,
-			uploaderStudentNumber: studentNumber,
+			uploaderId: userId,
 		})
 
 	// If there is a logged in user that is a curator, show every project, approved or not.

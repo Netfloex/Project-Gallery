@@ -119,7 +119,7 @@ export const ProjectDetails: FC<{
 					<Divider />
 					<UserOptions
 						hasVoted={hasVoted}
-						loggedInUserId={user.id}
+						loggedInUser={user}
 						project={project}
 					/>
 				</>
