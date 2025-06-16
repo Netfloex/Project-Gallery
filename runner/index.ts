@@ -3,6 +3,7 @@ import { randomInt } from "crypto"
 import { cookieName, sessionPassword } from "../src/utils/config"
 import { PythonShell } from "./lib/PythonShell"
 import { startServer } from "./lib/startServer"
+import { ServerDataType } from "./models/socket"
 import { parseCookies } from "./utils/parseCookies"
 import { writeTmpFile } from "./utils/writeFile"
 import { PrismaClient } from "@prisma/client"
@@ -25,6 +26,11 @@ io.on("connection", async (socket) => {
 
 	if (!projectIdParsed.success) {
 		console.error("Invalid project ID:", projectIdQuery)
+		socket.emit("data", {
+			content: "Invalid project ID. Please provide a valid project ID.",
+			id: id(),
+			type: ServerDataType.connectError,
+		})
 		socket.disconnect(true)
 
 		return
@@ -44,6 +50,12 @@ io.on("connection", async (socket) => {
 		typeof session.userId !== "number"
 	) {
 		console.error("Invalid session or user not found")
+		socket.emit("data", {
+			content:
+				"It seems like you are not logged in. Only logged in users can run projects.",
+			id: id(),
+			type: ServerDataType.connectError,
+		})
 		socket.disconnect(true)
 
 		return
@@ -55,6 +67,11 @@ io.on("connection", async (socket) => {
 	})
 
 	if (sessionUser === null) {
+		socket.emit("data", {
+			content: "Your account was not found. Please log in again.",
+			id: id(),
+			type: ServerDataType.connectError,
+		})
 		socket.disconnect(true)
 
 		return
@@ -83,6 +100,11 @@ io.on("connection", async (socket) => {
 
 	if (!project) {
 		console.error("Project not found:", projectId)
+		socket.emit("data", {
+			content: "Project is not approved (yet), or cannot be found.",
+			id: id(),
+			type: ServerDataType.connectError,
+		})
 		socket.disconnect(true)
 
 		return
@@ -92,6 +114,7 @@ io.on("connection", async (socket) => {
 
 	socket.emit("data", {
 		id: id(),
+		type: ServerDataType.announcement,
 		content: `Running project: ${project.name} (ID: ${project.id})\n`,
 	})
 
@@ -103,6 +126,7 @@ io.on("connection", async (socket) => {
 		console.log("Python message:", data)
 		socket.emit("data", {
 			id: id(),
+			type: ServerDataType.data,
 			content: data,
 		})
 	})
@@ -111,6 +135,7 @@ io.on("connection", async (socket) => {
 		console.log("Python script finished")
 		socket.emit("data", {
 			id: id(),
+			type: ServerDataType.announcement,
 			content: "Python script finished\n",
 		})
 		socket.disconnect(true)

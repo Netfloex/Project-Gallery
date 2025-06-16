@@ -1,5 +1,6 @@
 "use client"
 
+import { ServerDataType } from "../../../../runner/models/socket"
 import { CuratorOptions } from "./CuratorOptions"
 import { SocketStatus, useRunProject } from "./hooks/useRunProject"
 import { UserOptions } from "./UserOptions"
@@ -59,7 +60,7 @@ export const ProjectDetails: FC<{
 		: false
 
 	return (
-		<div className="flex flex-col gap-4 px-4">
+		<div className="flex flex-col gap-4 p-4">
 			<div className="flex flex-row gap-2">
 				<h1 className="flex-grow text-5xl">{project.name}</h1>
 				<ProfilePicture user={project.uploader} />
@@ -95,20 +96,48 @@ export const ProjectDetails: FC<{
 					</CardHeader>
 					<CardBody>
 						<ScrollShadow className="h-[400px]" ref={consoleRef}>
-							<pre>
-								{lines.map((l) => (
-									<span
-										className={
-											"isMe" in l
-												? "text-blue-500"
-												: undefined
-										}
-										key={l.id}
-									>
-										{l.content}
-									</span>
-								))}
-							</pre>
+							{isAllowedToStart ? (
+								<pre>
+									{lines.map((l) => (
+										<span
+											className={
+												"isMe" in l
+													? "text-blue-500"
+													: l.type ===
+														  ServerDataType.announcement
+														? "text-green-500"
+														: l.type ===
+															  ServerDataType.connectError
+															? "text-red-500"
+															: undefined
+											}
+											key={l.id}
+										>
+											{l.content}
+										</span>
+									))}
+								</pre>
+							) : (
+								<p className="text-red-500">
+									You are not allowed to run this project.{" "}
+									{user == undefined ? (
+										<span>
+											Please{" "}
+											<a
+												className="text-blue-500 underline"
+												href="/login"
+											>
+												log in
+											</a>{" "}
+											to run this project.
+										</span>
+									) : (
+										<span>
+											This project is not approved yet.
+										</span>
+									)}
+								</p>
+							)}
 						</ScrollShadow>
 					</CardBody>
 				</Card>
