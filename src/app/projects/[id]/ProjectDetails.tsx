@@ -1,6 +1,7 @@
 "use client"
 
 import { ServerDataType } from "../../../../runner/models/socket"
+import { FileResult } from "./actions/getFilesForProject"
 import { CuratorOptions } from "./CuratorOptions"
 import { SocketStatus, useRunProject } from "./hooks/useRunProject"
 import { UserOptions } from "./UserOptions"
@@ -16,6 +17,7 @@ import {
 	Form,
 	Input,
 	ScrollShadow,
+	Textarea,
 } from "@heroui/react"
 
 import { ProfilePicture } from "@components/ProfilePicture"
@@ -27,7 +29,8 @@ export const ProjectDetails: FC<{
 	project: PublicProject
 	user?: PublicUser
 	hasVoted: boolean
-}> = ({ project, user, hasVoted }) => {
+	projectFiles?: FileResult
+}> = ({ project, user, hasVoted, projectFiles }) => {
 	const [messageInput, setMessageInput] = useState<string>("")
 
 	const {
@@ -165,6 +168,21 @@ export const ProjectDetails: FC<{
 						loggedInUser={user}
 						project={project}
 					/>
+				</>
+			)}
+			{projectFiles && (
+				<>
+					<Divider />
+					<h2 className="text-3xl">Project Code</h2>
+					{projectFiles.success ? (
+						<Textarea
+							defaultValue={projectFiles.files.join("\n")}
+							isReadOnly
+							maxRows={20}
+						/>
+					) : (
+						<div>{projectFiles.error.message}</div>
+					)}
 				</>
 			)}
 
