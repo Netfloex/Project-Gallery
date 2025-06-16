@@ -1,6 +1,7 @@
 "use client"
 
 import { voteForProject } from "./actions/voteForProject"
+import { DeleteButton } from "./DeleteButton"
 import { useMutation } from "@tanstack/react-query"
 import {
 	userIsAllowedToModifyProject,
@@ -75,9 +76,7 @@ export const UserOptions: FC<{
 
 				{userIsOwnerOfProject(loggedInUser, project) && (
 					<>
-						<Button color="danger" isDisabled={!isAllowedToModify}>
-							Remove project
-						</Button>
+						<DeleteButton projectId={project.id} />
 						<Button
 							as={Link}
 							color="secondary"
