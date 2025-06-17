@@ -10,7 +10,7 @@ import { PrismaClient } from "@prisma/client"
 import { unsealData } from "iron-session"
 import { z } from "zod"
 
-const ProjectIdSchema = z.coerce.string().uuid()
+const ProjectIdSchema = z.string().length(8)
 const prisma = new PrismaClient()
 const io = startServer()
 
