@@ -2,16 +2,18 @@
 
 import { ServerDataType } from "../../../../runner/models/socket"
 import { FileResult } from "./actions/getFilesForProject"
-import { CuratorOptions } from "./CuratorOptions"
 import { DeleteButton } from "./DeleteButton"
 import { SocketStatus, useRunProject } from "./hooks/useRunProject"
+import { PublishButton } from "./PublishButton"
 import { VoteButton } from "./VoteButton"
 import { userIsAllowedToUseProject, userIsOwnerOfProject } from "@utils/checks"
 import Link from "next/link"
 import { FC, FormEvent, useEffect, useRef, useState } from "react"
-import { MdEdit, MdPlayArrow, MdStop } from "react-icons/md"
+import { FiEdit, FiPlay, FiSquare } from "react-icons/fi"
 
 import {
+	Accordion,
+	AccordionItem,
 	Button,
 	Card,
 	CardBody,
@@ -21,6 +23,7 @@ import {
 	Input,
 	ScrollShadow,
 	Textarea,
+	Tooltip,
 } from "@heroui/react"
 
 import { ProfilePicture } from "@components/ProfilePicture"
@@ -68,6 +71,8 @@ export const ProjectDetails: FC<{
 	const isOwner =
 		user !== undefined ? userIsOwnerOfProject(user, project) : false
 
+	const isCurator = user?.role === "CURATOR"
+
 	return (
 		<div className="flex flex-col gap-4 p-4 sm:p-8">
 			<Card className="bg-white/20">
@@ -83,19 +88,24 @@ export const ProjectDetails: FC<{
 										project={project}
 									/>
 								)}
+								{isCurator && (
+									<PublishButton project={project} />
+								)}
 								{isOwner && (
 									<>
 										<DeleteButton projectId={project.id} />
-										<Button
-											as={Link}
-											color="secondary"
-											href={`/projects/${project.id}/edit`}
-											isDisabled={!project.approved}
-											isIconOnly
-											title="Edit Project"
-										>
-											<MdEdit size={25} />
-										</Button>
+
+										<Tooltip content="Edit project">
+											<Button
+												as={Link}
+												color="secondary"
+												href={`/projects/${project.id}/edit`}
+												isIconOnly
+												title="Edit Project"
+											>
+												<FiEdit size={25} />
+											</Button>
+										</Tooltip>
 									</>
 								)}
 							</div>
@@ -107,6 +117,30 @@ export const ProjectDetails: FC<{
 							// eslint-disable-next-line react/no-array-index-key
 							<p key={i}>{line}</p>
 						))}
+						{projectFiles && (
+							<Accordion>
+								{projectFiles.success ? (
+									projectFiles.files.map((file, i) => {
+										return (
+											<AccordionItem
+												key="1"
+												aria-label="Accordion 1"
+												subtitle="Press to show"
+												title={`Project file ${i + 1}`}
+											>
+												<Textarea
+													defaultValue={file}
+													isReadOnly
+													maxRows={50}
+												/>
+											</AccordionItem>
+										)
+									})
+								) : (
+									<div>{projectFiles.error.toString()}</div>
+								)}
+							</Accordion>
+						)}
 					</div>
 				</CardHeader>
 				<Divider />
@@ -115,36 +149,38 @@ export const ProjectDetails: FC<{
 					<div className="space-y-2">
 						<Card>
 							<CardHeader className="flex flex-row gap-2">
+								<Tooltip content="Start / stop project">
+									{socketStatus === SocketStatus.Connected ? (
+										<Button
+											color="danger"
+											isDisabled={!isAllowedToStart}
+											isIconOnly
+											onPress={disconnectSocket}
+											title="Stop"
+										>
+											<FiSquare size={25} />
+										</Button>
+									) : socketStatus ===
+									  SocketStatus.Disconnected ? (
+										<Button
+											color="success"
+											isDisabled={!isAllowedToStart}
+											isIconOnly
+											onPress={connectSocket}
+											title="Start"
+										>
+											<FiPlay color="white" size={25} />
+										</Button>
+									) : (
+										<Button
+											color="primary"
+											isDisabled
+											isIconOnly
+											isLoading
+										/>
+									)}
+								</Tooltip>
 								{/* --- Start Button --- */}
-								{socketStatus === SocketStatus.Connected ? (
-									<Button
-										color="danger"
-										isDisabled={!isAllowedToStart}
-										isIconOnly
-										onPress={disconnectSocket}
-										title="Stop"
-									>
-										<MdStop size={25} />
-									</Button>
-								) : socketStatus ===
-								  SocketStatus.Disconnected ? (
-									<Button
-										color="success"
-										isDisabled={!isAllowedToStart}
-										isIconOnly
-										onPress={connectSocket}
-										title="Start"
-									>
-										<MdPlayArrow color="white" size={25} />
-									</Button>
-								) : (
-									<Button
-										color="primary"
-										isDisabled
-										isIconOnly
-										isLoading
-									/>
-								)}
 							</CardHeader>
 							<Divider />
 							<CardBody>
@@ -225,29 +261,6 @@ export const ProjectDetails: FC<{
 					</div>
 				</CardBody>
 			</Card>
-
-			{projectFiles && (
-				<>
-					<Divider />
-					<h2 className="text-3xl">Project Code</h2>
-					{projectFiles.success ? (
-						<Textarea
-							defaultValue={projectFiles.files.join("\n")}
-							isReadOnly
-							maxRows={20}
-						/>
-					) : (
-						<div>{projectFiles.error.toString()}</div>
-					)}
-				</>
-			)}
-
-			{user?.role === "CURATOR" && (
-				<>
-					<Divider />
-					<CuratorOptions project={project} />
-				</>
-			)}
 		</div>
 	)
 }

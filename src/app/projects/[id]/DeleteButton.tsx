@@ -1,7 +1,7 @@
 import { deleteProject, DeleteProjectResult } from "./actions/deleteProject"
 import { useMutation } from "@tanstack/react-query"
 import { FC } from "react"
-import { MdDelete } from "react-icons/md"
+import { FiTrash } from "react-icons/fi"
 
 import {
 	Button,
@@ -10,6 +10,7 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
+	Tooltip,
 	useDisclosure,
 } from "@heroui/react"
 
@@ -76,14 +77,16 @@ export const DeleteButton: FC<{ projectId: string }> = ({ projectId }) => {
 					)}
 				</ModalContent>
 			</Modal>
-			<Button
-				color="danger"
-				isIconOnly
-				onPress={onOpen}
-				title="Delete Project"
-			>
-				<MdDelete size={25} />
-			</Button>
+			<Tooltip content="Remove project">
+				<Button
+					color="danger"
+					isIconOnly
+					onPress={onOpen}
+					title="Delete Project"
+				>
+					<FiTrash size={25} />
+				</Button>
+			</Tooltip>
 		</>
 	)
 }

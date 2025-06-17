@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Suspense } from "react"
 
-import { Navbar, NavbarBrand, NavbarContent } from "@heroui/navbar"
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/navbar"
 
 import type { FC } from "react"
 
@@ -17,6 +17,14 @@ export const Header: FC = () => (
 				<p className="font-bold text-inherit">Project Gallery</p>
 			</Link>
 		</NavbarBrand>
+		<NavbarContent justify="center">
+			<NavbarItem>
+				<Link href="/">Home</Link>
+			</NavbarItem>
+			<NavbarItem>
+				<Link href="/projects">Projects</Link>
+			</NavbarItem>
+		</NavbarContent>
 		<NavbarContent justify="end">
 			<Suspense fallback={<LoginMenu />}>
 				<UserInfo />

@@ -1,5 +1,6 @@
 import ProjectCard from "./ProjectCard"
 
+import { Alert } from "@heroui/alert"
 import { ScrollShadow } from "@heroui/scroll-shadow"
 
 import type { FC } from "react"
@@ -20,7 +21,7 @@ export const ProjectList: FC<{ projects: PublicProject[] }> = ({
 			</ScrollShadow>
 		)}
 		{projects.length === 0 && (
-			<h1 className="text-center">No projects yet</h1>
+			<Alert color="primary">No projects found</Alert>
 		)}
 	</>
 )

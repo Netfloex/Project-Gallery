@@ -11,6 +11,7 @@ import {
 	Card,
 	CardBody,
 	CardHeader,
+	Divider,
 	Form,
 	Input,
 } from "@heroui/react"
@@ -33,6 +34,7 @@ export const ProfileUpdateRequestForm: FC<{ user: PublicUser }> = ({
 			<CardHeader>
 				<h1 className="text-3xl">Customize profile</h1>
 			</CardHeader>
+			<Divider />
 			<CardBody>
 				<Form action={profileUpdateAction} className="items-center">
 					<Input

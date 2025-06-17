@@ -5,7 +5,9 @@ import { unstable_cacheTag as cacheTag } from "next/cache"
 import { CacheTags } from "@typings/CacheTags"
 import { PublicProfileUpdateRequest } from "@typings/ProfileUpdateRequest"
 
-export const getRequests = async (): Promise<PublicProfileUpdateRequest[]> => {
+export const getProfileUpdateRequests = async (): Promise<
+	PublicProfileUpdateRequest[]
+> => {
 	"use cache"
 	cacheTag(CacheTags.profileUpdateRequests)
 

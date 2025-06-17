@@ -9,6 +9,7 @@ import {
 	Card,
 	CardBody,
 	CardHeader,
+	Divider,
 	Form,
 	Input,
 	Textarea,
@@ -28,6 +29,7 @@ export const ProjectUploadForm: FC = () => {
 			<CardHeader>
 				<h1 className="text-3xl">Upload new project</h1>
 			</CardHeader>
+			<Divider />
 			<CardBody>
 				<Form action={projectUploadAction} className="items-center">
 					<Input
