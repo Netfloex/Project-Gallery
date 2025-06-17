@@ -14,7 +14,6 @@ export const ProfileUpdateRequest: FC<{
 }> = ({ request }) => {
 	const { mutate, isPending, isSuccess } = useMutation({
 		mutationFn: (accept: boolean) => handleRequest(request, accept),
-		onSettled: console.log,
 	})
 
 	return (
@@ -30,12 +29,12 @@ export const ProfileUpdateRequest: FC<{
 			<CardBody>
 				<div className="flex items-center justify-center gap-4">
 					<NamedAvatar
-						imageId={request.requester.profilePictureId}
+						imageId={request.requester.profilePicture?.id}
 						name={request.requester.name}
 					/>
 					<div className="text-4xl">→</div>
 					<NamedAvatar
-						imageId={request.profilePictureId}
+						imageId={request.profilePictureId ?? undefined}
 						name={request.newName}
 					/>
 				</div>

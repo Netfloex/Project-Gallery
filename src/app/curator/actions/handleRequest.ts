@@ -10,14 +10,14 @@ export const handleRequest = async (
 	request: PublicProfileUpdateRequest,
 	accept: boolean,
 ): Promise<void> => {
-	console.log(`Handling request ${request} with accept=${accept}`)
-
 	if (accept) {
 		// Update the user's profile picture and name
 		await prisma.user.update({
 			where: { id: request.requesterId },
 			data: {
-				profilePictureId: request.profilePictureId || undefined,
+				profilePicture: request.profilePictureId
+					? { connect: { id: request.profilePictureId } }
+					: undefined,
 				name: request.newName,
 			},
 		})

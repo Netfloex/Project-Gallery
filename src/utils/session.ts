@@ -8,7 +8,7 @@ import { cookies } from "next/headers"
 import { CacheTags } from "@typings/CacheTags"
 import { PublicUser } from "@typings/user"
 
-type StoredSessionData = { userId: number; created: Date }
+type StoredSessionData = { userId: string; created: Date }
 
 type SessionData = StoredSessionData & { user: PublicUser }
 
@@ -18,7 +18,7 @@ const getSessionData = async (): Promise<IronSession<StoredSessionData>> =>
 		cookieName: cookieName,
 	})
 
-const getUser = async (userId: number): Promise<PublicUser | null> => {
+const getUser = async (userId: string): Promise<PublicUser | null> => {
 	"use cache"
 	cacheTag(CacheTags.users)
 
@@ -28,7 +28,7 @@ const getUser = async (userId: number): Promise<PublicUser | null> => {
 			select: dbUtils.publicUserFilter,
 		})
 		.catch((error: Error) => {
-			console.log(
+			console.error(
 				"Error getting user from db for session: " + error.message,
 			)
 
@@ -55,7 +55,7 @@ export const logout = async (): Promise<void> => {
 	session.destroy()
 }
 
-export const login = async (userId: number): Promise<void> => {
+export const login = async (userId: string): Promise<void> => {
 	const session = await getSessionData()
 
 	session.userId = userId

@@ -33,7 +33,7 @@ interface UseRunProjectReturn {
 
 const useValue = <T>(value: () => T): T => useState<T>(value)[0]
 
-export const useRunProject = (projectId: number): UseRunProjectReturn => {
+export const useRunProject = (projectId: string): UseRunProjectReturn => {
 	const [lines, setLines] = useState<Line[]>([])
 
 	const [socketStatus, setSocketStatus] = useState<SocketStatus>(

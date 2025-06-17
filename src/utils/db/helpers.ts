@@ -5,7 +5,7 @@ import { CacheTags } from "@typings/CacheTags"
 
 // Find whether a project is approved or not
 export const isApprovedProject = async (
-	projectId: number,
+	projectId: string,
 ): Promise<boolean> => {
 	"use cache"
 	cacheTag(CacheTags.projects)

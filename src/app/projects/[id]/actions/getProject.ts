@@ -13,13 +13,13 @@ interface OkResult {
 
 interface ErrResult {
 	success: false
-	error: Error
+	error: string
 }
 
 type ProjectResult = OkResult | ErrResult
 
 export const getProject = async (
-	id: number,
+	id: string,
 	user?: PublicUser,
 ): Promise<ProjectResult> => {
 	"use cache"
@@ -28,7 +28,7 @@ export const getProject = async (
 
 	const whereClauses: {
 		approved: boolean
-		uploaderId?: number
+		uploaderId?: string
 	}[] = [{ approved: true }]
 
 	// If there is a logged in user, show the projects that are theirs but unapproved as well.
@@ -56,5 +56,8 @@ export const getProject = async (
 			select: dbUtils.approvedProjectFilter,
 		})
 		.then((project) => ({ success: true, project }) as OkResult)
-		.catch((error: Error) => ({ success: false, error }) as ErrResult)
+		.catch(
+			(error: Error) =>
+				({ success: false, error: error.toString() }) as ErrResult,
+		)
 }

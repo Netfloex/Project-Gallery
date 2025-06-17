@@ -4,7 +4,7 @@ import { unstable_cacheTag as cacheTag } from "next/cache"
 import { CacheTags } from "@typings/CacheTags"
 
 const getProfilePicture = async (
-	id: number,
+	id: string,
 ): Promise<{ data: Uint8Array } | null> => {
 	"use cache"
 	cacheTag(CacheTags.profilePictures)
@@ -21,12 +21,7 @@ export const GET = async (
 ): Promise<Response> => {
 	const { id } = await params
 
-	const idParsed = parseInt(id)
-
-	if (isNaN(idParsed))
-		return new Response("Invalid profile picture id", { status: 400 })
-
-	const profilePicture = await getProfilePicture(idParsed)
+	const profilePicture = await getProfilePicture(id)
 
 	if (profilePicture === null)
 		return new Response("Could not find profile picture", { status: 404 })

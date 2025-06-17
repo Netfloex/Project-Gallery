@@ -5,8 +5,8 @@ import { unstable_cacheTag as cacheTag } from "next/cache"
 import { CacheTags } from "@typings/CacheTags"
 
 export const hasVotedForProject = async (
-	projectId: number,
-	voterId: number,
+	projectId: string,
+	voterId: string,
 ): Promise<VoteResult> => {
 	"use cache"
 	cacheTag(CacheTags.votes)
@@ -25,7 +25,7 @@ export const hasVotedForProject = async (
 			(error: Error) =>
 				({
 					success: false,
-					error: error,
+					error: error.toString(),
 				}) as ErrResult,
 		)
 }

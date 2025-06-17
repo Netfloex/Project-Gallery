@@ -15,13 +15,13 @@ export interface OkResult {
 
 export interface ErrResult {
 	success: false
-	error: Error
+	error: string
 }
 
 export type VoteResult = OkResult | ErrResult
 
 export const voteForProject = async (
-	projectId: number,
+	projectId: string,
 	remove = false,
 ): Promise<VoteResult> => {
 	const sessionData = await session.get()
@@ -29,7 +29,7 @@ export const voteForProject = async (
 	if (sessionData === null)
 		return {
 			success: false,
-			error: new Error("You are not logged in"),
+			error: "You are not logged in",
 		}
 
 	const isApproved = await isApprovedProject(projectId)
@@ -37,7 +37,7 @@ export const voteForProject = async (
 	if (!userIsAllowedToUseProject(sessionData.user, isApproved))
 		return {
 			success: false,
-			error: new Error("You are not allowed to use this project"),
+			error: "You are not allowed to use this project",
 		}
 
 	const votePromise = remove
@@ -70,7 +70,7 @@ export const voteForProject = async (
 			(error: Error) =>
 				({
 					success: false,
-					error: error,
+					error: error.toString(),
 				}) as ErrResult,
 		)
 }

@@ -48,7 +48,7 @@ export const ProfileUpdateRequestForm: FC<{ user: PublicUser }> = ({
 							isDisabled={state.success}
 							name={user.name || undefined}
 							size="lg"
-							src={getProfilePictureSrc(user.profilePictureId)}
+							src={getProfilePictureSrc(user.profilePicture?.id)}
 						/>
 						<Input
 							accept={[".png", ".jpg", ".jpeg"].join(",")}

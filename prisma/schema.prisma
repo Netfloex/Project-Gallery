@@ -16,14 +16,13 @@ datasource db {
 
 /// A user, who has a student number, name, password and role. Can upload projects and vote on them.
 model User {
-  id               Int             @id @default(autoincrement())
-  studentNumber    String          @unique
-  createdAt        DateTime        @default(now())
-  password         String
-  name             String?
-  profilePicture   ProfilePicture? @relation(fields: [profilePictureId], references: [id])
-  profilePictureId Int?            @unique
-  role             Role            @default(USER)
+  id             String          @id @default(nanoid(8))
+  studentNumber  String          @unique
+  createdAt      DateTime        @default(now())
+  password       String
+  name           String?
+  profilePicture ProfilePicture?
+  role           Role            @default(USER)
 
   projects              Project[]
   votes                 Vote[]
@@ -38,9 +37,10 @@ enum Role {
 }
 
 model ProfilePicture {
-  id Int @id @default(autoincrement())
+  id String @id @default(nanoid(8))
 
-  owner                User?
+  owner                User?                 @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId              String?               @unique
   profileUpdateRequest ProfileUpdateRequest?
 
   data Bytes
@@ -51,10 +51,10 @@ model ProfileUpdateRequest {
 
   newName          String?
   profilePicture   ProfilePicture? @relation(fields: [profilePictureId], references: [id])
-  profilePictureId Int?            @unique
+  profilePictureId String?         @unique
 
-  requester   User @relation(fields: [requesterId], references: [id], onDelete: Cascade)
-  requesterId Int  @id
+  requester   User   @relation(fields: [requesterId], references: [id], onDelete: Cascade)
+  requesterId String @id
 }
 
 /// A vote that can be cast on a project by a user
@@ -62,10 +62,10 @@ model Vote {
   createdAt DateTime @default(now())
 
   project   Project @relation(fields: [projectId], references: [id])
-  projectId Int
+  projectId String
 
-  user    User @relation(fields: [voterId], references: [id], onDelete: Cascade)
-  voterId Int
+  user    User   @relation(fields: [voterId], references: [id], onDelete: Cascade)
+  voterId String
 
   @@id([voterId, projectId])
 }
@@ -74,10 +74,10 @@ model ProjectEditRequest {
   createdAt DateTime @default(now())
 
   project   Project @relation(fields: [projectId], references: [id])
-  projectId Int     @unique
+  projectId String  @unique
 
-  user        User @relation(fields: [requesterId], references: [id])
-  requesterId Int
+  user        User   @relation(fields: [requesterId], references: [id])
+  requesterId String
 
   name        String?
   description String?
@@ -88,7 +88,7 @@ model ProjectEditRequest {
 
 /// A project that is created by an uploader (user), has a name & description, can be approved by a curator, can be voted on
 model Project {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(nanoid(8))
   createdAt   DateTime @default(now())
   name        String
   description String
@@ -96,21 +96,20 @@ model Project {
 
   votes       Vote[]
   editRequest ProjectEditRequest?
-  publicVotes Int                 @default(0)
 
   files File[]
 
-  uploader   User @relation(fields: [uploaderId], references: [id])
-  uploaderId Int
+  uploader   User   @relation(fields: [uploaderId], references: [id])
+  uploaderId String
 }
 
 // A file uploaded that contains user provided code. Has a name and is related to a project.
 model File {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(nanoid(8))
   createdAt DateTime @default(now())
   name      String
   contents  String
 
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId Int
+  projectId String
 }

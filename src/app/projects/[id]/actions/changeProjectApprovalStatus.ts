@@ -19,7 +19,7 @@ export interface ErrResult {
 export type ChangeStatusResult = OkResult | ErrResult
 
 export const changeProjectApprovalStatus = async (
-	projectId: number,
+	projectId: string,
 	approved: boolean,
 ): Promise<ChangeStatusResult> => {
 	const sessionData = await session.get()

@@ -29,7 +29,7 @@ export const getProjects = async ({
 
 	const whereClauses: {
 		approved: boolean
-		uploaderId?: number
+		uploaderId?: string
 	}[] = []
 
 	if (includeApproved) {

@@ -33,7 +33,7 @@ export const UserOptions: FC<{
 			projectId,
 			remove,
 		}: {
-			projectId: number
+			projectId: string
 			remove: boolean
 		}) => voteForProject(projectId, remove),
 		onSuccess: (data) => {
@@ -92,9 +92,7 @@ export const UserOptions: FC<{
 			{error !== null && <Alert color="danger">{error.message}</Alert>}
 
 			{voteResult?.success === false && (
-				<Alert color="danger">
-					Failed to vote: {voteResult.error.message}
-				</Alert>
+				<Alert color="danger">Failed to vote: {voteResult.error}</Alert>
 			)}
 		</div>
 	)

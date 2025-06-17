@@ -33,7 +33,7 @@ export type RequestResult = OkResult | ErrResult | NoResult
 
 export const requestProjectEdit = async (
 	data: FormData,
-	projectId: number,
+	projectId: string,
 ): Promise<RequestResult> => {
 	const formData = Object.fromEntries(data.entries())
 

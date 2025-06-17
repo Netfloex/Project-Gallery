@@ -10,7 +10,7 @@ import { PrismaClient } from "@prisma/client"
 import { unsealData } from "iron-session"
 import { z } from "zod"
 
-const ProjectIdSchema = z.coerce.number().int().positive()
+const ProjectIdSchema = z.coerce.string().uuid()
 const prisma = new PrismaClient()
 const io = startServer()
 
@@ -47,7 +47,7 @@ io.on("connection", async (socket) => {
 		!session ||
 		typeof session !== "object" ||
 		!("userId" in session) ||
-		typeof session.userId !== "number"
+		typeof session.userId !== "string"
 	) {
 		console.error("Invalid session or user not found")
 		socket.emit("data", {

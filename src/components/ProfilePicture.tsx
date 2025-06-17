@@ -16,7 +16,7 @@ const capitalize = (sentence: string): string =>
 export const ProfilePicture: FC<{ user: PublicUser }> = ({ user }) => (
 	<User
 		avatarProps={{
-			src: getProfilePictureSrc(user.profilePictureId),
+			src: getProfilePictureSrc(user.profilePicture?.id),
 			name: user.name || undefined,
 		}}
 		description={capitalize(user.role)}

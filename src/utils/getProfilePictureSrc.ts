@@ -1,5 +1,5 @@
 export const getProfilePictureSrc = (
-	profilePictureId: number | null,
+	profilePictureId?: string,
 ): string | undefined => {
 	if (!profilePictureId) {
 		return undefined

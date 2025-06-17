@@ -10,13 +10,13 @@ export interface OkResult {
 
 export interface ErrResult {
 	success: false
-	error: Error
+	error: string
 }
 
 export type FileResult = OkResult | ErrResult
 
 export const getFilesForProject = async (
-	projectId: number,
+	projectId: string,
 ): Promise<FileResult> => {
 	"use cache"
 
@@ -33,7 +33,7 @@ export const getFilesForProject = async (
 			if (project === null) {
 				const response: ErrResult = {
 					success: false,
-					error: new Error("Could not find project"),
+					error: "Could not find project",
 				}
 
 				return response
@@ -49,7 +49,7 @@ export const getFilesForProject = async (
 		.catch((error: Error) => {
 			const response: ErrResult = {
 				success: false,
-				error: error,
+				error: error.toString(),
 			}
 
 			return response

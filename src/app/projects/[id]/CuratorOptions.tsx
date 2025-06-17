@@ -31,7 +31,7 @@ export const CuratorOptions: FC<{ project: PublicProject }> = ({ project }) => {
 			projectId,
 			approved,
 		}: {
-			projectId: number
+			projectId: string
 			approved: boolean
 		}) => changeProjectApprovalStatus(projectId, approved),
 		onSuccess: (data) => {

@@ -5,8 +5,8 @@ export const publicUserFilter = {
 	id: true,
 	name: true,
 	createdAt: true,
-	profilePictureId: true,
 	role: true,
+	profilePicture: { select: { id: true } },
 }
 
 /**

@@ -15,51 +15,37 @@ const ProjectPage: NextPage<{
 }> = async ({ params }) => {
 	const { id } = await params
 
-	const idParsed = parseInt(id)
+	const sessionData = await session.get()
 
-	if (!isNaN(idParsed)) {
-		const sessionData = await session.get()
+	const result = await getProject(id, sessionData?.user)
 
-		const result = await getProject(idParsed, sessionData?.user)
+	if (result.success && result.project !== null) {
+		const hasVotedResult = sessionData
+			? await hasVotedForProject(result.project.id, sessionData?.userId)
+			: { success: true, voted: false }
 
-		if (result.success && result.project !== null) {
-			const hasVotedResult = sessionData
-				? await hasVotedForProject(
-						result.project.id,
-						sessionData?.userId,
-					)
-				: { success: true, voted: false }
+		const isAllowedToSeeCode = sessionData?.user
+			? userIsOwnerOfProject(sessionData.user, result.project)
+			: false
 
-			const isAllowedToSeeCode = sessionData?.user
-				? userIsOwnerOfProject(sessionData.user, result.project)
-				: false
+		const projectFiles = isAllowedToSeeCode
+			? await getFilesForProject(result.project.id)
+			: undefined
 
-			const projectFiles = isAllowedToSeeCode
-				? await getFilesForProject(result.project.id)
-				: undefined
-
-			return (
-				<div className="container mx-auto">
-					<ProjectDetails
-						hasVoted={
-							hasVotedResult.success && hasVotedResult.voted
-						}
-						project={result.project}
-						projectFiles={projectFiles}
-						user={sessionData?.user}
-					/>
-				</div>
-			)
-		}
-
-		if (!result.success)
-			return (
-				<ErrorPage
-					description={result.error.message}
-					errorText={result.error.name}
+		return (
+			<div className="container mx-auto">
+				<ProjectDetails
+					hasVoted={hasVotedResult.success && hasVotedResult.voted}
+					project={result.project}
+					projectFiles={projectFiles}
+					user={sessionData?.user}
 				/>
-			)
+			</div>
+		)
 	}
+
+	if (!result.success)
+		return <ErrorPage errorText={result.error.toString()} />
 
 	return <ErrorPage errorText="Project not found" />
 }

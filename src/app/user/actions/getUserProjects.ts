@@ -18,7 +18,7 @@ interface ErrResult {
 export type GetUserProjectResult = OkResult | ErrResult
 
 export const getUserProjects = async (
-	userId: number,
+	userId: string,
 ): Promise<GetUserProjectResult> => {
 	"use cache"
 	cacheTag(CacheTags.projects)

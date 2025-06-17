@@ -20,7 +20,7 @@ export interface ErrResult {
 export type DeleteProjectResult = OkResult | ErrResult
 
 export const deleteProject = async (
-	projectId: number,
+	projectId: string,
 ): Promise<DeleteProjectResult> => {
 	const sessionData = await session.get()
 
@@ -35,7 +35,7 @@ export const deleteProject = async (
 	if (!project.success) {
 		return {
 			success: false,
-			error: project.error.message,
+			error: project.error.toString(),
 		}
 	}
 

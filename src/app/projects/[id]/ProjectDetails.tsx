@@ -181,7 +181,7 @@ export const ProjectDetails: FC<{
 							maxRows={20}
 						/>
 					) : (
-						<div>{projectFiles.error.message}</div>
+						<div>{projectFiles.error.toString()}</div>
 					)}
 				</>
 			)}

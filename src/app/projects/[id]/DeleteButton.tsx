@@ -12,7 +12,7 @@ import {
 	useDisclosure,
 } from "@heroui/react"
 
-export const DeleteButton: FC<{ projectId: number }> = ({ projectId }) => {
+export const DeleteButton: FC<{ projectId: string }> = ({ projectId }) => {
 	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
 
 	const { mutate, data, isPending, error, isError } = useMutation<
@@ -25,11 +25,7 @@ export const DeleteButton: FC<{ projectId: number }> = ({ projectId }) => {
 				onClose()
 			}
 		},
-		onError: console.error,
-		onSettled: console.log,
 	})
-
-	console.log(error)
 
 	return (
 		<>
