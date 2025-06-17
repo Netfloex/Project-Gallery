@@ -1,9 +1,8 @@
-"use client"
-
 import Link from "next/link"
 import { FC } from "react"
 
-import { Button, NavbarItem } from "@heroui/react"
+import { Button } from "@heroui/button"
+import { NavbarItem } from "@heroui/navbar"
 
 export const LoginMenu: FC = () => (
 	<>

@@ -6,18 +6,26 @@ import { hasVotedForProject } from "./actions/hasVotedForProject"
 import { ProjectDetails } from "./ProjectDetails"
 import { userIsOwnerOfProject } from "@utils/checks"
 import * as session from "@utils/session"
-import { NextPage } from "next"
+import { Metadata, NextPage } from "next"
+import { cache } from "react"
 
 import ErrorPage from "@components/ErrorPage"
 
-const ProjectPage: NextPage<{
+const getProjectAndSessionCached = cache(async (id: string) => {
+	const sessionData = await session.get()
+	const result = await getProject(id, sessionData?.user)
+
+	return { result, sessionData }
+})
+
+interface Props {
 	params: Promise<{ id: string }>
-}> = async ({ params }) => {
+}
+
+const ProjectPage: NextPage<Props> = async ({ params }) => {
 	const { id } = await params
 
-	const sessionData = await session.get()
-
-	const result = await getProject(id, sessionData?.user)
+	const { result, sessionData } = await getProjectAndSessionCached(id)
 
 	if (result.success && result.project !== null) {
 		const hasVotedResult = sessionData
@@ -48,6 +56,26 @@ const ProjectPage: NextPage<{
 		return <ErrorPage errorText={result.error.toString()} />
 
 	return <ErrorPage errorText="Project not found" />
+}
+
+export const generateMetadata = async ({
+	params,
+}: Props): Promise<Metadata> => {
+	const { id } = await params
+
+	const { result } = await getProjectAndSessionCached(id)
+
+	if (result.success && result.project !== null) {
+		return {
+			title: result.project.name,
+			description: result.project.description,
+		}
+	}
+
+	return {
+		title: "Project not found",
+		description: "The requested project could not be found.",
+	}
 }
 
 export default ProjectPage

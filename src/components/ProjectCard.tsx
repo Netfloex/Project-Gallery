@@ -1,18 +1,11 @@
-"use client"
-
 import { ProfilePicture } from "./ProfilePicture"
 import Link from "next/link"
 import { format } from "timeago.js"
 
-import {
-	Button,
-	Card,
-	CardBody,
-	CardFooter,
-	CardHeader,
-	Chip,
-	Divider,
-} from "@heroui/react"
+import { Button } from "@heroui/button"
+import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card"
+import { Chip } from "@heroui/chip"
+import { Divider } from "@heroui/divider"
 
 import { FCC } from "@typings/FCC"
 import { PublicProject } from "@typings/project"

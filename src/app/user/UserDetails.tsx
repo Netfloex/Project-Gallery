@@ -1,5 +1,3 @@
-"use client"
-
 import { GetUserProjectResult } from "./actions/getUserProjects"
 import { ProfileUpdateRequestForm } from "./ProfileUpdateRequestForm"
 import { ProjectUploadForm } from "./ProjectUploadForm"
@@ -13,7 +11,7 @@ export const UserDetails: FC<{
 	user: PublicUser
 	projectResult: GetUserProjectResult
 }> = ({ user, projectResult }) => (
-	<div className="container mx-auto px-4">
+	<div className="container mx-auto p-4">
 		<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
 			<ProfileUpdateRequestForm user={user} />
 			<ProjectUploadForm />

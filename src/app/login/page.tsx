@@ -1,89 +1,26 @@
-"use client"
+import { LoginForm } from "./LoginForm"
+import { Metadata } from "next"
 
-import { login } from "./actions/login"
-import { useRouter } from "next/navigation"
-import { useActionState, useEffect } from "react"
-
-import {
-	Alert,
-	Button,
-	Card,
-	CardBody,
-	CardHeader,
-	Form,
-	Input,
-} from "@heroui/react"
+import { Card, CardBody, CardHeader } from "@heroui/card"
 
 import type { FC } from "react"
 
-const Register: FC = () => {
-	const [state, action, pending] = useActionState(login, {
-		success: false,
-		error: false,
-	})
+const Login: FC = () => (
+	<div className="container mx-auto my-auto px-4">
+		<Card className="mx-auto w-full lg:w-1/3">
+			<CardHeader className="justify-center">
+				<p className="text-3xl">Login</p>
+			</CardHeader>
+			<CardBody>
+				<LoginForm />
+			</CardBody>
+		</Card>
+	</div>
+)
 
-	const router = useRouter()
-
-	useEffect(() => {
-		if (state.success) router.push("/user")
-	}, [state.success, router])
-
-	return (
-		<div className="container mx-auto my-auto px-4">
-			<Card className="mx-auto w-full lg:w-1/3">
-				<CardHeader className="justify-center">
-					<p className="text-3xl">Login</p>
-				</CardHeader>
-				<CardBody>
-					<Form action={action}>
-						<Input
-							color={
-								state.error
-									? "danger"
-									: state.success
-										? "success"
-										: "default"
-							}
-							isRequired
-							label="Student Number"
-							maxLength={20}
-							minLength={2}
-							name="studentNumber"
-							placeholder="Enter your given student number"
-						/>
-
-						<Input
-							color={
-								state.error
-									? "danger"
-									: state.success
-										? "success"
-										: "default"
-							}
-							isRequired
-							label="Password"
-							maxLength={256}
-							minLength={8}
-							name="password"
-							placeholder="Enter your password"
-							type="password"
-						/>
-						{state.error && (
-							<Alert color="danger" title={state.errorMessage} />
-						)}
-						<Button
-							className="w-full"
-							color="primary"
-							isLoading={pending}
-							type="submit"
-						>
-							Login
-						</Button>
-					</Form>
-				</CardBody>
-			</Card>
-		</div>
-	)
+export const metadata: Metadata = {
+	title: "Login",
+	description: "Login to your account",
 }
 
-export default Register
+export default Login

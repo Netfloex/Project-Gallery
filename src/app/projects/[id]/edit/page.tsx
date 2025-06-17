@@ -43,4 +43,9 @@ const ProjectEditPage: NextPage<{
 	return <ErrorPage errorText="Project not found" />
 }
 
+export const metadata = {
+	title: "Edit Project",
+	description: "Edit your project details and files.",
+}
+
 export default ProjectEditPage

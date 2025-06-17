@@ -1,9 +1,8 @@
-"use client"
-
 import ProjectCard from "./ProjectCard"
-import { FC } from "react"
 
-import { ScrollShadow } from "@heroui/react"
+import { ScrollShadow } from "@heroui/scroll-shadow"
+
+import type { FC } from "react"
 
 import { PublicProject } from "@typings/project"
 

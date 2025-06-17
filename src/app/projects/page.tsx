@@ -1,7 +1,7 @@
 import { Toolbar } from "./Toolbar"
 import { getProjects } from "@actions/getProjects"
 import * as session from "@utils/session"
-import { NextPage } from "next"
+import { Metadata, NextPage } from "next"
 import { Suspense } from "react"
 import { z } from "zod"
 
@@ -40,6 +40,7 @@ const Dashboard: NextPage<{
 
 	return (
 		<div className="container mx-auto flex flex-grow flex-col gap-4 p-4">
+			<h1 className="text-center text-4xl font-bold">Project List</h1>
 			<Toolbar
 				searchError={searchError}
 				searchQuery={query}
@@ -60,6 +61,11 @@ const Dashboard: NextPage<{
 			</Suspense>
 		</div>
 	)
+}
+
+export const metadata: Metadata = {
+	title: "Project Lists",
+	description: "Browse through a collection of projects",
 }
 
 export default Dashboard

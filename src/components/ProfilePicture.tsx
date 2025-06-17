@@ -1,9 +1,7 @@
-"use client"
-
 import { getProfilePictureSrc } from "@utils/getProfilePictureSrc"
 import { FC } from "react"
 
-import { User } from "@heroui/react"
+import { User } from "@heroui/user"
 
 import { PublicUser } from "@typings/user"
 

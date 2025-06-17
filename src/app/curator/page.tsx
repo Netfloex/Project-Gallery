@@ -2,7 +2,7 @@ import { getRequests } from "./actions/getRequests"
 import { ProfileUpdateRequest } from "./ProfileUpdateRequest"
 import { getProjects } from "@actions/getProjects"
 import * as session from "@utils/session"
-import { NextPage } from "next"
+import { Metadata, NextPage } from "next"
 import { redirect } from "next/navigation"
 
 import { ScrollShadow } from "@heroui/scroll-shadow"
@@ -55,6 +55,11 @@ const Curator: NextPage = async () => {
 			</div>
 		</div>
 	)
+}
+
+export const metadata: Metadata = {
+	title: "Curator Dashboard",
+	description: "Manage unapproved projects and requests",
 }
 
 export default Curator

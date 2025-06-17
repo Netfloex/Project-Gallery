@@ -1,5 +1,6 @@
 "use client"
 
+// error.tsx must be a Client Component
 import { FC } from "react"
 
 import ErrorPage from "@components/ErrorPage"

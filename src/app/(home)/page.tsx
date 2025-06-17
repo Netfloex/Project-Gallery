@@ -25,7 +25,7 @@ const Home: FC = async () => {
 	]
 
 	return (
-		<div className="container mx-auto flex flex-grow flex-col gap-8">
+		<div className="container mx-auto flex flex-grow flex-col gap-8 p-8">
 			<h1 className="text-center text-6xl">Project Gallery</h1>
 
 			<div className="grid flex-grow grid-cols-1 gap-8 md:grid-cols-2">
