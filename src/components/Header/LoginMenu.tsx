@@ -7,7 +7,7 @@ import { Button, NavbarItem } from "@heroui/react"
 
 export const LoginMenu: FC = () => (
 	<>
-		<NavbarItem className="hidden lg:flex">
+		<NavbarItem>
 			<Link href="/login">Login</Link>
 		</NavbarItem>
 		<NavbarItem>
