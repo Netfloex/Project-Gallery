@@ -89,37 +89,45 @@ export const requestProfileUpdate = async (
 		profilePicture = await profilePictureFile.bytes()
 	}
 
-	const hasProfileUpdateRequest = await prisma.profileUpdateRequest
-		.findUnique({
-			where: { requesterId: sessionData.userId },
-		})
-		.then((request) => request !== null)
-		.catch(() => false)
+	const profilePictureStatement =
+		profilePicture === null
+			? undefined
+			: {
+					create: {
+						data: profilePicture,
+					},
+				}
 
-	// If there is already a profile update request, remove it
-	if (hasProfileUpdateRequest)
-		await prisma.profileUpdateRequest.delete({
-			where: { requesterId: sessionData.userId },
-		})
-
-	await prisma.profileUpdateRequest.create({
-		data: {
-			newName: name,
-			profilePicture:
-				profilePicture === null
-					? undefined
-					: {
-							create: {
-								data: profilePicture,
-							},
-						},
-			requester: {
-				connect: { id: sessionData.userId },
+	await prisma.$transaction([
+		// Delete possible exiting profile pictures
+		prisma.profilePicture.deleteMany({
+			where: {
+				profileUpdateRequest: {
+					requesterId: sessionData.userId,
+				},
+				owner: { is: null },
 			},
-		},
-	})
+		}),
+
+		// Create the profile update request or update an existing one
+		prisma.profileUpdateRequest.upsert({
+			where: { requesterId: sessionData.userId },
+			create: {
+				newName: name,
+				profilePicture: profilePictureStatement,
+				requester: {
+					connect: { id: sessionData.userId },
+				},
+			},
+			update: {
+				newName: name,
+				profilePicture: profilePictureStatement,
+			},
+		}),
+	])
 
 	revalidateTag(CacheTags.profileUpdateRequests)
+	revalidateTag(CacheTags.profilePictures)
 
 	return { success: true, error: false }
 }

@@ -25,8 +25,11 @@ export const handleRequest = async (
 		revalidateTag(CacheTags.profilePictures)
 		revalidateTag(CacheTags.projects)
 		revalidateTag(CacheTags.users)
-	} else {
-		console.log("Request rejected, no changes made.")
+	} else if (request.profilePictureId) {
+		await prisma.profilePicture.delete({
+			where: { id: request.profilePictureId },
+		})
+		revalidateTag(CacheTags.profilePictures)
 	}
 
 	await prisma.profileUpdateRequest.delete({
