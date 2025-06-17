@@ -13,7 +13,7 @@ import { PublicProject } from "@typings/project"
 const ProjectCard: FCC<{ project: PublicProject }> = ({ project }) => (
 	<Card>
 		<CardHeader className="flex flex-row items-center">
-			<p className="grow-1 text-xl">{project.name}</p>
+			<p className="line-clamp-2 grow-1 text-xl">{project.name}</p>
 			<ProfilePicture user={project.uploader} />
 		</CardHeader>
 

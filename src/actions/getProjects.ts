@@ -12,6 +12,7 @@ const isVotesSortOption = (sort: SortOption): boolean =>
 interface ProjectsFilter {
 	sort?: SortOption
 	query?: string
+	page?: number
 	user?: PublicUser
 	limit?: number
 	includeApproved?: boolean
@@ -21,6 +22,7 @@ export const getProjects = async ({
 	sort = "date-desc",
 	query,
 	user,
+	page = 1,
 	limit = 50,
 	includeApproved = true,
 }: ProjectsFilter): Promise<PublicProject[]> => {
@@ -83,6 +85,7 @@ export const getProjects = async ({
 			},
 
 			take: limit,
+			skip: (page - 1) * limit,
 
 			// Select only the required properties for a published project.
 			select: dbUtils.approvedProjectFilter,
