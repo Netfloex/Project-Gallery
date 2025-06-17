@@ -30,7 +30,7 @@ export const deleteProject = async (
 			error: "You are not logged in",
 		}
 
-	const project = await getProject(projectId)
+	const project = await getProject(projectId, sessionData.user)
 
 	if (!project.success) {
 		return {
