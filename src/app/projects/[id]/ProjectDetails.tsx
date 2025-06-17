@@ -120,22 +120,20 @@ export const ProjectDetails: FC<{
 						{projectFiles && (
 							<Accordion>
 								{projectFiles.success ? (
-									projectFiles.files.map((file, i) => {
-										return (
-											<AccordionItem
-												key="1"
-												aria-label="Accordion 1"
-												subtitle="Press to show"
-												title={`Project file ${i + 1}`}
-											>
-												<Textarea
-													defaultValue={file}
-													isReadOnly
-													maxRows={50}
-												/>
-											</AccordionItem>
-										)
-									})
+									projectFiles.files.map((file, i) => (
+										<AccordionItem
+											aria-label="Accordion 1"
+											key="1"
+											subtitle="Press to show"
+											title={`Project file ${i + 1}`}
+										>
+											<Textarea
+												defaultValue={file}
+												isReadOnly
+												maxRows={50}
+											/>
+										</AccordionItem>
+									))
 								) : (
 									<div>{projectFiles.error.toString()}</div>
 								)}
