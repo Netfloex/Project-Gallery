@@ -2,18 +2,22 @@
 
 import { ServerDataType } from "../../../../runner/models/socket"
 import { FileResult } from "./actions/getFilesForProject"
-import { DeleteButton } from "./DeleteButton"
 import { SocketStatus, useRunProject } from "./hooks/useRunProject"
-import { PublishButton } from "./PublishButton"
 import { VoteButton } from "./VoteButton"
 import { userIsAllowedToUseProject, userIsOwnerOfProject } from "@utils/checks"
-import Link from "next/link"
+import NextLink from "next/link"
 import { FC, FormEvent, useEffect, useRef, useState } from "react"
-import { FiEdit, FiPlay, FiSquare } from "react-icons/fi"
+import {
+	FiCloud,
+	FiCloudOff,
+	FiEdit2,
+	FiPlay,
+	FiSquare,
+	FiTrash,
+} from "react-icons/fi"
 
 import {
-	Accordion,
-	AccordionItem,
+	Alert,
 	Button,
 	Card,
 	CardBody,
@@ -21,12 +25,15 @@ import {
 	Divider,
 	Form,
 	Input,
+	Link,
 	ScrollShadow,
-	Textarea,
 	Tooltip,
 } from "@heroui/react"
 
+import { DeleteProjectButton } from "@components/DeleteProjectButton"
 import { ProfilePicture } from "@components/ProfilePicture"
+import { ProjectFilesDrawer } from "@components/ProjectFilesDrawer"
+import { PublishProjectButton } from "@components/PublishProjectButton"
 
 import { PublicProject } from "@typings/project"
 import { PublicUser } from "@typings/user"
@@ -89,21 +96,61 @@ export const ProjectDetails: FC<{
 									/>
 								)}
 								{isCurator && (
-									<PublishButton project={project} />
+									<PublishProjectButton
+										activator={(open, isPending) => (
+											<Tooltip
+												content={`${project.approved ? "Unpublish" : "Publish"} project`}
+											>
+												<Button
+													color={
+														project.approved
+															? "danger"
+															: "primary"
+													}
+													isIconOnly
+													isLoading={isPending}
+													onPress={open}
+												>
+													{project.approved ? (
+														<FiCloudOff size={25} />
+													) : (
+														<FiCloud size={25} />
+													)}
+												</Button>
+											</Tooltip>
+										)}
+										project={project}
+									/>
 								)}
 								{isOwner && (
 									<>
-										<DeleteButton projectId={project.id} />
+										<DeleteProjectButton
+											activator={(open, isPending) => (
+												<Tooltip content="Remove project">
+													<Button
+														color="danger"
+														isIconOnly
+														isLoading={isPending}
+														onPress={open}
+														title="Delete Project"
+													>
+														<FiTrash size={25} />
+													</Button>
+												</Tooltip>
+											)}
+											projectId={project.id}
+										/>
 
 										<Tooltip content="Edit project">
 											<Button
 												as={Link}
 												color="secondary"
 												href={`/projects/${project.id}/edit`}
+												isDisabled={!isAllowedToStart}
 												isIconOnly
 												title="Edit Project"
 											>
-												<FiEdit size={25} />
+												<FiEdit2 size={25} />
 											</Button>
 										</Tooltip>
 									</>
@@ -117,28 +164,14 @@ export const ProjectDetails: FC<{
 							// eslint-disable-next-line react/no-array-index-key
 							<p key={i}>{line}</p>
 						))}
-						{projectFiles && (
-							<Accordion>
-								{projectFiles.success ? (
-									projectFiles.files.map((file, i) => (
-										<AccordionItem
-											aria-label="Accordion 1"
-											key="1"
-											subtitle="Press to show"
-											title={`Project file ${i + 1}`}
-										>
-											<Textarea
-												defaultValue={file}
-												isReadOnly
-												maxRows={50}
-											/>
-										</AccordionItem>
-									))
-								) : (
-									<div>{projectFiles.error.toString()}</div>
-								)}
-							</Accordion>
-						)}
+						{projectFiles &&
+							(projectFiles.success ? (
+								<ProjectFilesDrawer
+									files={projectFiles.files}
+								/>
+							) : (
+								<div>{projectFiles.error.toString()}</div>
+							))}
 					</div>
 				</CardHeader>
 				<Divider />
@@ -178,7 +211,29 @@ export const ProjectDetails: FC<{
 										/>
 									)}
 								</Tooltip>
-								{/* --- Start Button --- */}
+
+								{!isAllowedToStart && (
+									<Alert color="warning">
+										You are not allowed to run this project.{" "}
+										{user == undefined ? (
+											<>
+												Please{" "}
+												<Link
+													as={NextLink}
+													href="/login"
+												>
+													log in
+												</Link>{" "}
+												to run this project.
+											</>
+										) : (
+											<>
+												This project is not approved
+												yet.
+											</>
+										)}
+									</Alert>
+								)}
 							</CardHeader>
 							<Divider />
 							<CardBody>
@@ -186,7 +241,7 @@ export const ProjectDetails: FC<{
 									className="h-[400px]"
 									ref={consoleRef}
 								>
-									{isAllowedToStart ? (
+									{isAllowedToStart && (
 										<pre>
 											{lines.map((l) => (
 												<span
@@ -207,28 +262,6 @@ export const ProjectDetails: FC<{
 												</span>
 											))}
 										</pre>
-									) : (
-										<p className="text-red-500">
-											You are not allowed to run this
-											project.{" "}
-											{user == undefined ? (
-												<span>
-													Please{" "}
-													<a
-														className="text-blue-500 underline"
-														href="/login"
-													>
-														log in
-													</a>{" "}
-													to run this project.
-												</span>
-											) : (
-												<span>
-													This project is not approved
-													yet.
-												</span>
-											)}
-										</p>
 									)}
 								</ScrollShadow>
 								<Form

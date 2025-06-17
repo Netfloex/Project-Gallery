@@ -1,6 +1,6 @@
 import { getFilesForProject } from "../actions/getFilesForProject"
-import { getProject } from "../actions/getProject"
 import { EditProjectForm } from "./EditProjectForm"
+import { getProject } from "@actions/getProject"
 import { userIsAllowedToModifyProject } from "@utils/checks"
 import * as session from "@utils/session"
 import { NextPage } from "next"

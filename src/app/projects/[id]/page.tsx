@@ -1,9 +1,9 @@
 "use server"
 
 import { getFilesForProject } from "./actions/getFilesForProject"
-import { getProject } from "./actions/getProject"
 import { hasVotedForProject } from "./actions/hasVotedForProject"
 import { ProjectDetails } from "./ProjectDetails"
+import { getProject } from "@actions/getProject"
 import { userIsOwnerOfProject } from "@utils/checks"
 import * as session from "@utils/session"
 import { Metadata, NextPage } from "next"

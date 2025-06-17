@@ -1,6 +1,6 @@
 "use server"
 
-import { getProject } from "../../actions/getProject"
+import { getProject } from "@actions/getProject"
 import prisma from "@lib/prisma"
 import { userIsAllowedToModifyProject } from "@utils/checks"
 import * as session from "@utils/session"

@@ -1,14 +1,12 @@
 import { getProfileUpdateRequests } from "./actions/getProfileUpdateRequests"
 import { ProfileUpdateRequest } from "./ProfileUpdateRequest"
+import { ProjectApprovalRequest } from "./ProjectApprovalRequest"
 import { getProjects } from "@actions/getProjects"
 import * as session from "@utils/session"
 import { Metadata, NextPage } from "next"
 import { redirect } from "next/navigation"
 
 import { Alert } from "@heroui/alert"
-import { ScrollShadow } from "@heroui/scroll-shadow"
-
-import { ProjectList } from "@components/ProjectList"
 
 const Curator: NextPage = async () => {
 	const sessionData = await session.get()
@@ -19,16 +17,33 @@ const Curator: NextPage = async () => {
 	const projects = await getProjects({
 		user: sessionData.user,
 		includeApproved: false,
+		limit: 9,
 	})
 
 	const requests = await getProfileUpdateRequests()
 
 	return (
 		<div className="container mx-auto p-4">
-			<div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+			<div className="flex flex-col gap-4">
 				<div className="flex flex-1 flex-col gap-4">
 					<h1 className="text-3xl">Unapproved projects</h1>
-					<ProjectList projects={projects} />
+					{projects.length !== 0 && (
+						<div className="grid grid-cols-1 gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+							{projects.map((project) => (
+								<ProjectApprovalRequest
+									key={project.id}
+									project={project}
+								/>
+							))}
+						</div>
+					)}
+					{projects.length === 0 && (
+						<h1 className="">
+							<Alert color="primary">
+								No unapproved requests
+							</Alert>
+						</h1>
+					)}
 				</div>
 
 				<div className="flex flex-1 flex-col gap-4">
@@ -41,7 +56,7 @@ const Curator: NextPage = async () => {
 								</Alert>
 							</h1>
 						) : (
-							<ScrollShadow className="max-h-[1000px]">
+							<div className="grid grid-cols-1 lg:grid-cols-3">
 								<div className="flex flex-col gap-4">
 									{requests.map((request) => (
 										<ProfileUpdateRequest
@@ -50,7 +65,7 @@ const Curator: NextPage = async () => {
 										/>
 									))}
 								</div>
-							</ScrollShadow>
+							</div>
 						)}
 					</div>
 				</div>

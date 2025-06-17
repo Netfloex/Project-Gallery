@@ -5,7 +5,14 @@ import { NamedAvatar } from "./NamedAvatar"
 import { useMutation } from "@tanstack/react-query"
 import { FC } from "react"
 
-import { Button, Card, CardBody, CardHeader } from "@heroui/react"
+import {
+	Button,
+	Card,
+	CardBody,
+	CardFooter,
+	CardHeader,
+	Divider,
+} from "@heroui/react"
 
 import { PublicProfileUpdateRequest } from "@typings/ProfileUpdateRequest"
 
@@ -26,6 +33,7 @@ export const ProfileUpdateRequest: FC<{
 					</span>
 				</div>
 			</CardHeader>
+			<Divider />
 			<CardBody>
 				<div className="flex items-center justify-center gap-4">
 					<NamedAvatar
@@ -38,23 +46,25 @@ export const ProfileUpdateRequest: FC<{
 						name={request.newName}
 					/>
 				</div>
-				<div className="flex justify-between">
-					<Button
-						color={isSuccess ? "success" : "danger"}
-						isLoading={isPending}
-						onPress={() => mutate(false)}
-					>
-						Reject
-					</Button>
-					<Button
-						color={isSuccess ? "success" : "primary"}
-						isLoading={isPending}
-						onPress={() => mutate(true)}
-					>
-						Accept
-					</Button>
-				</div>
 			</CardBody>
+			<Divider />
+
+			<CardFooter className="justify-between">
+				<Button
+					color={isSuccess ? "success" : "danger"}
+					isLoading={isPending}
+					onPress={() => mutate(false)}
+				>
+					Reject
+				</Button>
+				<Button
+					color={isSuccess ? "success" : "primary"}
+					isLoading={isPending}
+					onPress={() => mutate(true)}
+				>
+					Accept
+				</Button>
+			</CardFooter>
 		</Card>
 	)
 }

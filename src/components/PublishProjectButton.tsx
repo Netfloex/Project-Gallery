@@ -1,9 +1,8 @@
 "use client"
 
-import { changeProjectApprovalStatus } from "./actions/changeProjectApprovalStatus"
+import { changeProjectApprovalStatus } from "@actions/changeProjectApprovalStatus"
 import { useMutation } from "@tanstack/react-query"
-import { FC, useState } from "react"
-import { FiCloud, FiCloudOff } from "react-icons/fi"
+import { FC, ReactElement, useState } from "react"
 
 import {
 	Alert,
@@ -13,13 +12,15 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
-	Tooltip,
 	useDisclosure,
 } from "@heroui/react"
 
 import { PublicProject } from "@typings/project"
 
-export const PublishButton: FC<{ project: PublicProject }> = ({ project }) => {
+export const PublishProjectButton: FC<{
+	project: PublicProject
+	activator: (open: () => void, isPending: boolean) => ReactElement
+}> = ({ project, activator }) => {
 	const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure()
 
 	const [isApproved, setApproved] = useState(project.approved)
@@ -42,22 +43,7 @@ export const PublishButton: FC<{ project: PublicProject }> = ({ project }) => {
 
 	return (
 		<>
-			<Tooltip
-				content={`${isApproved ? "Unpublish" : "Publish"} project`}
-			>
-				<Button
-					color={isApproved ? "danger" : "primary"}
-					isIconOnly
-					isLoading={isPending}
-					onPress={onOpen}
-				>
-					{isApproved ? (
-						<FiCloudOff size={25} />
-					) : (
-						<FiCloud size={25} />
-					)}
-				</Button>
-			</Tooltip>
+			{activator(onOpen, isPending)}
 
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
 				<ModalContent>
@@ -72,7 +58,7 @@ export const PublishButton: FC<{ project: PublicProject }> = ({ project }) => {
 							<ModalBody>
 								{isApproved
 									? "The project will no longer be visible to anyone who is not a curator or the uploader of the project"
-									: "The project will become visible to everyone"}
+									: "The project will become visible to everyone. Make sure that the code in this project is not malicious, as any logged in user will be able to run it!"}
 
 								{data?.success === false && (
 									<Alert color="danger">

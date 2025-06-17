@@ -1,7 +1,8 @@
-import { deleteProject, DeleteProjectResult } from "./actions/deleteProject"
+"use client"
+
+import { deleteProject, DeleteProjectResult } from "@actions/deleteProject"
 import { useMutation } from "@tanstack/react-query"
-import { FC } from "react"
-import { FiTrash } from "react-icons/fi"
+import { FC, ReactElement } from "react"
 
 import {
 	Button,
@@ -10,11 +11,13 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
-	Tooltip,
 	useDisclosure,
 } from "@heroui/react"
 
-export const DeleteButton: FC<{ projectId: string }> = ({ projectId }) => {
+export const DeleteProjectButton: FC<{
+	projectId: string
+	activator: (open: () => void, isPending: boolean) => ReactElement
+}> = ({ projectId, activator }) => {
 	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
 
 	const { mutate, data, isPending, error, isError } = useMutation<
@@ -77,16 +80,7 @@ export const DeleteButton: FC<{ projectId: string }> = ({ projectId }) => {
 					)}
 				</ModalContent>
 			</Modal>
-			<Tooltip content="Remove project">
-				<Button
-					color="danger"
-					isIconOnly
-					onPress={onOpen}
-					title="Delete Project"
-				>
-					<FiTrash size={25} />
-				</Button>
-			</Tooltip>
+			{activator(onOpen, isPending)}
 		</>
 	)
 }
