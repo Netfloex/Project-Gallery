@@ -1,6 +1,7 @@
 import { deleteProject, DeleteProjectResult } from "./actions/deleteProject"
 import { useMutation } from "@tanstack/react-query"
 import { FC } from "react"
+import { MdDelete } from "react-icons/md"
 
 import {
 	Button,
@@ -75,8 +76,13 @@ export const DeleteButton: FC<{ projectId: string }> = ({ projectId }) => {
 					)}
 				</ModalContent>
 			</Modal>
-			<Button color="danger" onPress={onOpen}>
-				Remove Project
+			<Button
+				color="danger"
+				isIconOnly
+				onPress={onOpen}
+				title="Delete Project"
+			>
+				<MdDelete size={25} />
 			</Button>
 		</>
 	)
