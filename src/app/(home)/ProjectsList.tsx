@@ -1,9 +1,8 @@
-"use client"
-
 import Link from "next/link"
 import { FC } from "react"
 
-import { Button, ScrollShadow } from "@heroui/react"
+import { Button } from "@heroui/button"
+import { ScrollShadow } from "@heroui/scroll-shadow"
 
 import ProjectCard from "@components/ProjectCard"
 
